@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminMainController;
 use App\Http\Controllers\Admin\ClassController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Dosen\DosenMainController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -39,11 +40,10 @@ Route::middleware(['auth', 'verified', 'rolemanager:admin'])->group(function () 
             Route::post('/subject/store', 'store')->name('subject.store');
             Route::get('/subject/manage', 'manage_subject')->name('subject.manage');
             Route::get('/subject/{id}/edit', 'edit')->name('subject.edit'); // Route untuk edit subject
-            Route::put('/subject/{id}', 'update')->name('subject.update'); // Route untuk update subject
+            Route::put('/subject/{id}',     'update')->name('subject.update'); // Route untuk update subject
             Route::delete('/subject/{id}', 'destroy')->name('subject.destroy'); // Route untuk menghapus subject
         });
 
-        
 
         Route::controller(UserController::class)->group(function(){
             Route::get('user/create', 'index')->name('user.create');
@@ -57,9 +57,14 @@ Route::middleware(['auth', 'verified', 'rolemanager:admin'])->group(function () 
     });
 });
 
-Route::get('/dosen/dashboard', function () {
-    return view('dosen');
-})->middleware(['auth', 'verified', 'rolemanager:dosen'])->name('dosen');
+Route::middleware(['auth', 'verified', 'rolemanager:dosen'])->group(function () {
+    Route::prefix('dosen')->group(function(){
+        Route::controller(DosenMainController::class)->group(function(){
+            Route::get('/dashboard', 'index')->name('dosen');
+        });
+    });
+});
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -34,6 +34,12 @@ Edit Subject - Admin Panel
         </div>
 
         <div class="mb-3">
+            <label for="semester" class="form-label">Semester</label>
+           <input type="number" class="form-control" id="semester" name="semester" value="{{ $subject->semester }}" required>
+        </div>
+
+
+        <div class="mb-3">
             <label for="user_id" class="form-label">Dosen</label>
             <select class="form-select" id="user_id" name="user_id" required>
                 <option value="" disabled>Pilih Dosen</option>

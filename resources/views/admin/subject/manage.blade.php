@@ -20,8 +20,9 @@ Add Subject - Admin Panel
                 <th>ID</th>
                 <th>Nama Subject</th>
                 <th>Kelas</th>
-                <th>Tahun Angkatan</th> <!-- Kolom Tahun Angkatan ditambahkan -->
+                <th>Tahun Angkatan</th> <!-- Kolom Tahun Angkatan -->
                 <th>Dosen</th>
+                <th>Semester</th> <!-- Kolom Semester ditambahkan -->
                 <th>Aksi</th>
             </tr>
         </thead>
@@ -33,6 +34,7 @@ Add Subject - Admin Panel
                 <td>{{ $subject->classroom->name }}</td>
                 <td>{{ $subject->classroom->batch_year }}</td> <!-- Menampilkan Tahun Angkatan -->
                 <td>{{ $subject->user->name }}</td>
+                <td>{{ $subject->semester }}</td> <!-- Menampilkan Semester -->
                 <td>
                     <a href="{{ route('subject.edit', $subject->id) }}" class="btn btn-warning">Edit</a>
                     <form action="{{ route('subject.destroy', $subject->id) }}" method="POST" style="display:inline;">

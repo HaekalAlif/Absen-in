@@ -13,6 +13,7 @@ class Subject extends Model
         'name',
         'classroom_id',
         'user_id',
+        'semester'
     ];
 
     public function classroom()

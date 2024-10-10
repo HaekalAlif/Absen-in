@@ -30,6 +30,16 @@ Add Subject - Admin Panel
         </div>
 
         <div class="mb-3">
+            <label for="semester" class="form-label">Semester</label>
+            <select name="semester" id="semester" class="form-select" required>
+                <option value="" disabled selected>Pilih Semester</option>
+                @for ($i = 1; $i <= 6; $i++)
+                    <option value="{{ $i }}">{{ $i }}</option>
+                @endfor
+            </select>
+        </div>
+
+        <div class="mb-3">
             <label for="user_id" class="form-label">Dosen</label>
             <select class="form-select" id="user_id" name="user_id" required>
                 <option value="" disabled selected>Pilih Dosen</option>
