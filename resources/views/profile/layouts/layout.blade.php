@@ -112,21 +112,15 @@
               </a>
 
 							<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
-                <img src="img/avatars/avatar.jpg" class="avatar img-fluid rounded me-1" alt="Charles Hall" /> <span class="text-dark">{{ Auth::user()->name }}</span>
+                <img src="{{ asset('profile_images/' . $user->profile_image) }}" alt="Profile Image" class="rounded-circle" width="35" height="35"> <span class="text-dark">{{ Auth::user()->name }}</span>
               </a>
 							<div class="dropdown-menu dropdown-menu-end">
-								<a class="dropdown-item" href="#	"><i class="align-middle me-1" data-feather="user"></i> Profile</a>
+								<a class="dropdown-item" href="{{route('profile')}}"><i class="align-middle me-1" data-feather="user"></i> Profile</a>
 								<div class="dropdown-divider"></div>
-								<!-- Authentication -->
-								<form method="POST" action="{{ route('logout') }}">
-									@csrf
-
-									<x-dropdown-link :href="route('logout')"
-											onclick="event.preventDefault();
-														this.closest('form').submit();">
-										{{ __('Log Out') }}
-									</x-dropdown-link>
-								</form>
+								<a class="dropdown-item" href="{{ route('logout') }}" 
+									onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+									Log out
+								</a>
 							</div>
 						</li>
 					</ul>
@@ -136,7 +130,7 @@
 			<main class="content">
 				<div class="container-fluid p-0">
 
-					@yield('admin_layout')
+					@yield('profile_layout')
 
 				</div>
 			</main>
