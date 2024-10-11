@@ -72,9 +72,10 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::findOrFail($id);
-        return view('admin.user.edit', compact('user'));
-    }
+        $classrooms = Classroom::all(); // Ambil semua kelas untuk ditampilkan di dropdown
 
+        return view('admin.user.edit', compact('user', 'classrooms')); // Kirim user dan classrooms ke view
+    }
     // Mengupdate data user
     public function update(Request $request, $id)
     {

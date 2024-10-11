@@ -7,6 +7,7 @@ use App\Models\Subject; // Import model Subject
 use App\Models\Classroom; // Import model Classroom
 use App\Models\User; // Import model User
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SubjectController extends Controller
 {
@@ -19,7 +20,14 @@ class SubjectController extends Controller
         // Ambil semua dosen dengan role = 1
         $users = User::where('role', 1)->get();
 
-        return view('admin.subject.create', compact('classrooms', 'users'));
+        // Jika user yang login adalah dosen (role = 1), ambil mata kuliah yang diajarkan
+        if (Auth::user()->role == 1) {
+            $subjects = Subject::where('user_id', Auth::id())->get();
+        } else {
+            $subjects = collect(); // Kosongkan jika bukan dosen
+        }
+
+        return view('admin.subject.create', compact('classrooms', 'users', 'subjects'));
     }
 
     // Menyimpan subject baru ke dalam database
@@ -42,9 +50,6 @@ class SubjectController extends Controller
         // Redirect ke halaman manajemen subject dengan pesan sukses
         return redirect()->route('subject.manage')->with('success', 'Subject berhasil ditambahkan');
     }
-
-
-
 
     // Menampilkan daftar subject yang ada
     public function manage_subject()

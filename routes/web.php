@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminMainController;
 use App\Http\Controllers\Admin\ClassController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Dosen\AbsenController;
 use App\Http\Controllers\Dosen\DosenMainController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -61,8 +62,21 @@ Route::middleware(['auth', 'verified', 'rolemanager:dosen'])->group(function () 
     Route::prefix('dosen')->group(function(){
         Route::controller(DosenMainController::class)->group(function(){
             Route::get('/dashboard', 'index')->name('dosen');
+            Route::get('/settings', 'setting')->name('dosen.settings');
+            Route::get('/jadwal', 'jadwal')->name('dosen.jadwal');
+            Route::get('/dosen/absensi', 'absensi')->name('dosen.absensi');
+        });
+
+        Route::controller(AbsenController::class)->group(function(){
+            Route::get('/absen/create', 'create')->name('dosen.absen.create');
+            Route::post('/absen/store','store')->name('dosen.absen.store');
+            Route::get('/absen', 'index')->name('dosen.absensi.index');
         });
     });
+
+
+
+
 });
 
 

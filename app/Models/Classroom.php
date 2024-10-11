@@ -19,4 +19,9 @@ class Classroom extends Model
     {
         return $this->hasMany(User::class, 'class_id'); // Relasi satu ke banyak
     }
+
+    public function subjects()
+    {
+        return $this->hasMany(Subject::class); // Relasi ke model Subject
+    }
 }

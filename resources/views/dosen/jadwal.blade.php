@@ -1,7 +1,7 @@
 @extends('dosen.layouts.layout')
 @section('dosen_page_title')
-Dashboard - Dosen Panel
+Jadwal - Dosen Panel
 @endsection
 @section('dosen_layout')
-    <h3>Dosen Dashboard</h3>
+    <h3>Jadwal Dosen</h3>
 @endsection
