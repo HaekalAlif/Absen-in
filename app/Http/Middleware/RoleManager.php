@@ -28,7 +28,7 @@ class RoleManager
                     return $next($request);
                 }
                 break;
-            case 'dosen':
+            case 'dosen':   
                 if($authUserRole == 1){
                     return $next($request);
                 }
@@ -46,7 +46,7 @@ class RoleManager
             case 1:
                 return redirect()->route('dosen');
             case 2:
-                return redirect()->route('dashboard');
+                return redirect()->route('mahasiswa');
         }
 
         return  redirect()->route('login');

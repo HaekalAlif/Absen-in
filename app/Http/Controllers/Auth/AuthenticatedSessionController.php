@@ -35,7 +35,7 @@ class AuthenticatedSessionController extends Controller
         }else if( $authUserRole == 1) {
             return redirect()->intended(route('dosen', absolute:false ));
         }else{
-            return redirect()->intended(route('dashboard', absolute:false ));
+            return redirect()->intended(route('mahasiswa', absolute:false ));
         }
     }
 

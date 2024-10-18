@@ -7,24 +7,31 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Dosen\AbsenController;
 use App\Http\Controllers\Dosen\DosenMainController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Mahasiswa\MahasiswaMainController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified', 'rolemanager:mahasiswa'])->name('dashboard');
+//mahasiswa routes
+Route::middleware(['auth', 'verified', 'rolemanager:mahasiswa'])->group(function () {
+    Route::prefix('mahasiswa')->group(function(){
+        Route::controller(MahasiswaMainController::class)->group(function(){
+            Route::get('/dashboard', 'index')->name('mahasiswa');
+            Route::get('/settings', 'setting')->name('mahasiswa.settings');
+            Route::get('/faq', 'faq')->name('mahasiswa.faq');
+            Route::get('/jadwal', 'jadwal')->name('mahasiswa.jadwal');
+        });
+    });
+});
 
 //admin routes
-
 Route::middleware(['auth', 'verified', 'rolemanager:admin'])->group(function () {
     Route::prefix('admin')->group(function(){
         Route::controller(AdminMainController::class)->group(function(){
             Route::get('/dashboard', 'index')->name('admin');
             Route::get('/settings', 'setting')->name('admin.settings');
-
         });
 
         Route::controller(ClassController::class)->group(function(){
@@ -57,6 +64,7 @@ Route::middleware(['auth', 'verified', 'rolemanager:admin'])->group(function () 
     });
 });
 
+//dosen routes
 Route::middleware(['auth', 'verified', 'rolemanager:dosen'])->group(function () {
     Route::prefix('dosen')->group(function(){
         Route::controller(DosenMainController::class)->group(function(){
@@ -71,12 +79,7 @@ Route::middleware(['auth', 'verified', 'rolemanager:dosen'])->group(function () 
             Route::get('/absen', 'index')->name('absen.absensi');
         });
     });
-
-
-
-
 });
-
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

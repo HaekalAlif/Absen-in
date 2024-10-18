@@ -12,6 +12,14 @@ use App\Http\Controllers\Controller;
 
 class AbsenController extends Controller
 {
+     public function index()
+    {
+        // Ambil data absensi untuk ditampilkan
+        $classrooms = Classroom::all();
+        $absensi = Absensi::with('subject', 'classroom')->get(); // Ambil data absensi dengan relasi user dan classroom
+
+        return view('dosen.absen.absensi', compact('classrooms', 'absensi'));
+    }
     public function create()
     {
         $classrooms = Classroom::all(); // Ambil semua kelas
@@ -43,12 +51,5 @@ class AbsenController extends Controller
         return redirect()->route('absen.absensi')->with('success', 'Absensi berhasil dibuat.');
     }
 
-    public function index()
-    {
-        // Ambil data absensi untuk ditampilkan
-        $classrooms = Classroom::all();
-        $absensi = Absensi::with('subject', 'classroom')->get(); // Ambil data absensi dengan relasi user dan classroom
-
-        return view('dosen.absen.absensi', compact('classrooms', 'absensi'));
-    }
+   
 }
