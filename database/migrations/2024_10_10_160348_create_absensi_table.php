@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('absensi', function (Blueprint $table) {
             $table->id();
             $table->foreignId('classroom_id')->constrained(); // Mengacu pada tabel classrooms
-            $table->foreignId('user_id')->constrained(); // Mengacu pada tabel users
+            $table->foreignId("subject_id")->constrained();
             $table->date('date');
             $table->time('start_time');
             $table->time('end_time');

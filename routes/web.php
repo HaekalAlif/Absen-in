@@ -45,7 +45,6 @@ Route::middleware(['auth', 'verified', 'rolemanager:admin'])->group(function () 
             Route::delete('/subject/{id}', 'destroy')->name('subject.destroy'); // Route untuk menghapus subject
         });
 
-
         Route::controller(UserController::class)->group(function(){
             Route::get('user/create', 'index')->name('user.create');
             Route::post('user/store', 'store')->name('user.store');
@@ -64,13 +63,12 @@ Route::middleware(['auth', 'verified', 'rolemanager:dosen'])->group(function () 
             Route::get('/dashboard', 'index')->name('dosen');
             Route::get('/settings', 'setting')->name('dosen.settings');
             Route::get('/jadwal', 'jadwal')->name('dosen.jadwal');
-            Route::get('/dosen/absensi', 'absensi')->name('dosen.absensi');
         });
 
         Route::controller(AbsenController::class)->group(function(){
-            Route::get('/absen/create', 'create')->name('dosen.absen.create');
-            Route::post('/absen/store','store')->name('dosen.absen.store');
-            Route::get('/absen', 'index')->name('dosen.absensi.index');
+            Route::get('/absen/create', 'create')->name('absen.create');
+            Route::post('/absen/store','store')->name('absen.store');
+            Route::get('/absen', 'index')->name('absen.absensi');
         });
     });
 

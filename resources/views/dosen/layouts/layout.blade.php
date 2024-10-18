@@ -51,12 +51,18 @@
 						</li>
 
 						<li class="sidebar-header">
-							Tambahkan Absensi
+							Absensi
 						</li>
 
 						<li class="sidebar-item {{ request()->routeIs('absen.absensi') ? 'active' : '' }}">
-							<a class="sidebar-link" href="{{ route('dosen.absensi') }}">
+							<a class="sidebar-link" href="{{ route('absen.absensi') }}">
 								<i class="align-middle" data-feather="clipboard"></i> <span class="align-middle">Absensi</span>
+							</a>
+						</li>
+
+						<li class="sidebar-item {{ request()->routeIs('absen.create') ? 'active' : '' }}">
+							<a class="sidebar-link" href="{{ route('absen.create') }}">
+								<i class="align-middle" data-feather="clipboard"></i> <span class="align-middle">Create Absensi</span>
 							</a>
 						</li>
 

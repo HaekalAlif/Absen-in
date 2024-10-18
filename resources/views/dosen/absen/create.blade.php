@@ -1,28 +1,36 @@
+@extends('dosen.layouts.layout')
+
+@section('dosen_page_title')
+Create Absensi - Dosen Panel
+@endsection
+
+@section('dosen_layout')
 <div class="container mt-4">
     <h2>Buat Absensi</h2>
 
-    <form action="{{ route('dosen.absen.store') }}" method="POST">
+    <form action="{{ route('absen.store') }}" method="POST">
         @csrf
         
         <!-- Pilihan Kelas -->
         <div class="form-group">
-            <label for="classroom">Pilih Kelas:</label>
-            <select id="classroom" name="classroom_id" class="form-control">
+            <label for="classroom_id" class="form-label">Kelas dan Angkatan</label>
+            <select class="form-select" id="classroom_id" name="classroom_id" required>
+                <option value="" disabled selected>Pilih Kelas dan Angkatan</option>
                 @foreach($classrooms as $classroom)
-                    <option value="{{ $classroom->id }}">{{ $classroom->name }}</option>
+                    <option value="{{ $classroom->id }}">{{ $classroom->name }} ({{ $classroom->batch_year }})</option>
                 @endforeach
             </select>
         </div>
-
-        <!-- Pilihan Mahasiswa -->
+        
+        <!-- Pilihan Subject -->
         <div class="form-group">
-            <label for="user">Pilih Mahasiswa:</label>
-            <select id="user" name="user_id" class="form-control">
-                @foreach($users as $user)
-                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+            <label for="subject">Pilih Mata Kuliah:</label>
+            <select id="subject" name="subject_id" class="form-control">
+                @foreach($subjects as $subject)
+                    <option value="{{ $subject->id }}">{{ $subject->name }}</option>
                 @endforeach
             </select>
-        </div>
+        </div> 
 
         <!-- Tanggal -->
         <div class="form-group">
@@ -45,3 +53,4 @@
         <button type="submit" class="btn btn-primary">Simpan Absensi</button>
     </form>
 </div>
+@endsection
