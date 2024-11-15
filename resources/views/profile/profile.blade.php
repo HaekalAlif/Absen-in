@@ -1,10 +1,8 @@
-@extends('profile.layouts.layout')
-
-@section('admin_page_title')
-Profile - {{ $user->name }}
+@extends('mahasiswa.layouts.layout')
+@section('mahasiswa_page_title')
+Settings - Mahasiswa Panel
 @endsection
-
-@section('profile_layout')
+@section('mahasiswa_layout')
 <div class="container my-5">
     <h1 class="text-center mb-4">Profil Pengguna</h1>
 

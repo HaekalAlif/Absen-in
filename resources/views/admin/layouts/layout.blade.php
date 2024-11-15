@@ -25,13 +25,11 @@
 		<nav id="sidebar" class="sidebar js-sidebar">
 			<div class="sidebar-content js-simplebar">
 				<a class="sidebar-brand" href="#">
+					<img src="/admin_asset/img/icons/logo.png" alt="">
           <span class="align-middle">Absen-in</span>
         </a>
 
 				<ul class="sidebar-nav">
-					<li class="sidebar-header">
-						Pages
-					</li>
 
 					<li class="sidebar-item {{request()->routeIs('admin')?'active':''}}">
 						<a class="sidebar-link" href="{{route('admin')}}">
@@ -86,16 +84,6 @@
               <i class="align-middle" data-feather="list"></i> <span class="align-middle">Manage User</span>
             </a>
 					</li>
-
-                    <li class="sidebar-header">
-						Settings
-					</li>
-
-					<li class="sidebar-item {{request()->routeIs('admin.settings')?'active':''}}">
-						<a class="sidebar-link" href="{{route(name: 'admin.settings')}}">
-              <i class="align-middle" data-feather="settings"></i> <span class="align-middle">Settings</span>
-            </a>
-					</li>
 		</nav>
 
 		<div class="main">
@@ -112,7 +100,7 @@
               </a>
 
 							<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
-                <img src="img/avatars/avatar.jpg" class="avatar img-fluid rounded me-1" alt="Charles Hall" /> <span class="text-dark">{{ Auth::user()->name }}</span>
+                 <span class="text-dark">{{ Auth::user()->name }}</span>
               </a>
 							<div class="dropdown-menu dropdown-menu-end">
 								<a class="dropdown-item" href="#	"><i class="align-middle me-1" data-feather="user"></i> Profile</a>
@@ -146,22 +134,19 @@
 					<div class="row text-muted">
 						<div class="col-6 text-start">
 							<p class="mb-0">
-								<a class="text-muted" href="https://adminkit.io/" target="_blank"><strong>AdminKit</strong></a> - <a class="text-muted" href="https://adminkit.io/" target="_blank"><strong>Bootstrap Admin Template</strong></a>								&copy;
+								<a class="text-muted" href="#" target="_blank"><strong>Absen-In</strong></a> &copy;
 							</p>
 						</div>
 						<div class="col-6 text-end">
 							<ul class="list-inline">
 								<li class="list-inline-item">
-									<a class="text-muted" href="https://adminkit.io/" target="_blank">Support</a>
+									<a class="text-muted" href="https://www.instagram.com/mhmmdhaekall_/" target="_blank">Haekal</a>
 								</li>
 								<li class="list-inline-item">
-									<a class="text-muted" href="https://adminkit.io/" target="_blank">Help Center</a>
+									<a class="text-muted" href="https://www.instagram.com/luthfan.zip/" target="_blank">Luthfan</a>
 								</li>
 								<li class="list-inline-item">
-									<a class="text-muted" href="https://adminkit.io/" target="_blank">Privacy</a>
-								</li>
-								<li class="list-inline-item">
-									<a class="text-muted" href="https://adminkit.io/" target="_blank">Terms</a>
+									<a class="text-muted" href="https://www.instagram.com/feysoniapl/" target="_blank">Fevy</a>
 								</li>
 							</ul>
 						</div>

@@ -6590,7 +6590,7 @@ fieldset:disabled .btn {
 }
 .text-muted {
     --bs-text-opacity: 1;
-    color: var(--bs-secondary-color) !important;
+    color: #3abef9;
 }
 .text-black-50 {
     --bs-text-opacity: 1;
@@ -12099,7 +12099,7 @@ body {
 }
 .sidebar,
 .sidebar-content {
-    background: #222e3c;
+    background: #ffffff;
     transition: margin-left 0.35s ease-in-out, left 0.35s ease-in-out,
         margin-right 0.35s ease-in-out, right 0.35s ease-in-out;
 }
@@ -12116,12 +12116,13 @@ body {
 }
 .sidebar-link,
 a.sidebar-link {
-    background: #222e3c;
+    background: #ffffff;
     border-left: 3px solid transparent;
-    color: rgba(233, 236, 239, 0.5);
+    color: #000000;
     cursor: pointer;
     display: block;
-    font-weight: 400;
+    font-weight: 600;
+    font-size: 16px;
     padding: 0.625rem 1.625rem;
     position: relative;
     text-decoration: none;
@@ -12131,14 +12132,14 @@ a.sidebar-link {
 .sidebar-link svg,
 a.sidebar-link i,
 a.sidebar-link svg {
-    color: rgba(233, 236, 239, 0.5);
+    color: #3abef9;
     margin-right: 0.75rem;
 }
 .sidebar-link:focus {
     outline: 0;
 }
 .sidebar-link:hover {
-    background: #222e3c;
+    background: #3abef9;
     border-left-color: transparent;
 }
 .sidebar-link:hover,
@@ -12150,30 +12151,34 @@ a.sidebar-link svg {
 .sidebar-item.active > .sidebar-link {
     background: linear-gradient(
         90deg,
-        rgba(59, 125, 221, 0.1),
-        rgba(59, 125, 221, 0.088) 50%,
+        #3abef9,
+        #ffffff 10%,
         transparent
     );
-    border-left-color: #3b7ddd;
-    color: #e9ecef;
+    border-left-color: #3abef9;
+    color: #3abef9;
 }
+
+.sidebar-item{
+    margin-bottom:20px;
+    margin-top:20px;
+}
+
 .sidebar-item.active .sidebar-link:hover i,
 .sidebar-item.active .sidebar-link:hover svg,
 .sidebar-item.active > .sidebar-link i,
 .sidebar-item.active > .sidebar-link svg {
-    color: #e9ecef;
+    color: #3abef9;
 }
 .sidebar-brand {
-    color: #f8f9fa;
+    color: #3abef9;
     display: block;
-    font-size: 1.15rem;
+    font-size: 1.5rem;
     font-weight: 600;
-    padding: 1.15rem 1.5rem;
+    padding: 1rem;
+    margin-left:40px;
 }
-.sidebar-brand:hover {
-    color: #f8f9fa;
-    text-decoration: none;
-}
+
 .sidebar-brand:focus {
     outline: 0;
 }
@@ -12199,9 +12204,10 @@ a.sidebar-link svg {
 }
 .sidebar-header {
     background: transparent;
-    color: #ced4da;
-    font-size: 0.75rem;
-    padding: 1.5rem 1.5rem 0.375rem;
+    color: #3abef9;
+    font-size: 1.20rem;
+    font-weight: 700;
+    padding: 0.5rem 0.5rem 0.375rem;
 }
 .sidebar-badge {
     position: absolute;

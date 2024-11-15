@@ -10,11 +10,11 @@ return new class extends Migration
     {
         Schema::create('subjects', function (Blueprint $table) {
             $table->id(); // Primary key
-            $table->string('name'); // Nama subject
-            $table->foreignId('classroom_id')->constrained()->onDelete('cascade'); // Foreign key untuk kelas
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Foreign key untuk dosen
-            $table->integer('semester')->default(1); // Semester (1-6)
-            $table->timestamps(); // Timestamps untuk created_at dan updated_at
+            $table->string('name'); // Nama mata kuliah
+            $table->foreignId('classroom_id')->constrained()->onDelete('cascade'); // Relasi ke classrooms
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Relasi ke users (dosen)
+            $table->integer('semester')->default(1); // Semester, default 1
+            $table->timestamps(); // Timestamps
         });
     }
 

@@ -2,25 +2,34 @@
 
 namespace App\Http\Controllers\Mahasiswa;
 
-use App\Models\Classroom;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class MahasiswaMainController extends Controller
 {
-    public function index(){
-        return view('mahasiswa.dashboard');
-    } 
+    public function index()
+    {
+        $user = Auth::user()->load('classroom.subjects');
+        $classroom = $user->classroom;
+        $subjects = $classroom ? $classroom->subjects : collect();
 
-    public function faq(){
+        return view('mahasiswa.dashboard', compact('user', 'classroom', 'subjects'));
+    }
+
+    public function faq()
+    {
         return view('mahasiswa.faq');
     }
-    
-    public function setting(){
+
+    public function setting()
+    {
         return view('mahasiswa.settings');
     }
 
-    public function jadwal(){
+    public function jadwal()
+    {
         return view('mahasiswa.jadwal');
     }
+
 }

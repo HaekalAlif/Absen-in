@@ -2,6 +2,6 @@
 @section('mahasiswa_page_title')
 Dashboard - Mahasiswa Panel
 @endsection
-@section('student_layout')
+@section('mahasiswa_layout')
     <h3>Mahasiswa Dashboard</h3>
 @endsection

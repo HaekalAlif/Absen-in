@@ -26,8 +26,7 @@ class UserController extends Controller
         return view('admin.user.manage', compact('users'));
     }
 
-    // Menyimpan user baru ke database
-    // Menyimpan user baru ke database
+        // Menyimpan user baru ke database
     public function store(Request $request)
     {
         // Validasi input
@@ -76,6 +75,7 @@ class UserController extends Controller
 
         return view('admin.user.edit', compact('user', 'classrooms')); // Kirim user dan classrooms ke view
     }
+    
     // Mengupdate data user
     public function update(Request $request, $id)
     {

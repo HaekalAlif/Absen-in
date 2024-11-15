@@ -9,34 +9,33 @@ class Absensi extends Model
 {
     use HasFactory;
 
-    // Tentukan nama tabel secara eksplisit
     protected $table = 'absensi';
 
-    // Tentukan kolom yang dapat diisi secara massal
     protected $fillable = [
+        'user_id', 
         'classroom_id',
         'subject_id',
         'date',
         'start_time',
         'end_time',
-        'attendance_status',
+        'attendance_status'
     ];
 
-    /**
-     * Relasi ke model User
-     * Setiap Absensi dimiliki oleh satu User (Mahasiswa)
-     */
-    public function subject()
-    {
-        return $this->belongsTo(Subject::class, 'subject_id');
-    }
-
-    /**
-     * Relasi ke model Classroom
-     * Setiap Absensi terkait dengan satu Classroom
-     */
+    // Relasi ke tabel classrooms
     public function classroom()
     {
-        return $this->belongsTo(Classroom::class, 'classroom_id');
+        return $this->belongsTo(Classroom::class);
+    }
+
+    // Relasi ke tabel subjects
+     public function subject()
+    {
+        return $this->belongsTo(Subject::class, 'subject_id'); // Pastikan nama model Subject benar
+    }
+
+    // Relasi ke tabel user
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

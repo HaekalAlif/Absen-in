@@ -4,27 +4,49 @@ use App\Http\Controllers\Admin\AdminMainController;
 use App\Http\Controllers\Admin\ClassController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Dosen\AbsenController;
+use App\Http\Controllers\Dosen\AbsensiDosenController;
 use App\Http\Controllers\Dosen\DosenMainController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Mahasiswa\MahasiswaMainController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RekapAbsensiController;
+use App\Http\Controllers\Mahasiswa\AbsensiMahasiswaController;
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('auth.login');
+}); 
 
-//mahasiswa routes
+// Mahasiswa routes
 Route::middleware(['auth', 'verified', 'rolemanager:mahasiswa'])->group(function () {
-    Route::prefix('mahasiswa')->group(function(){
-        Route::controller(MahasiswaMainController::class)->group(function(){
-            Route::get('/dashboard', 'index')->name('mahasiswa');
-            Route::get('/settings', 'setting')->name('mahasiswa.settings');
-            Route::get('/faq', 'faq')->name('mahasiswa.faq');
-            Route::get('/jadwal', 'jadwal')->name('mahasiswa.jadwal');
-        });
+    Route::prefix('mahasiswa')->group(function () {
+        Route::get('/dashboard', [MahasiswaMainController::class, 'index'])->name('mahasiswa');
+        Route::get('/settings', [MahasiswaMainController::class, 'setting'])->name('mahasiswa.settings');
+        Route::get('/faq', [MahasiswaMainController::class, 'faq'])->name('mahasiswa.faq');
+        Route::get('/jadwal', [MahasiswaMainController::class, 'jadwal'])->name('mahasiswa.jadwal'); 
+        
+        Route::get('/absensi', [AbsensiMahasiswaController::class, 'index'])->name('absensi.index');
+        Route::get('/absensi/subject/{id}', [AbsensiMahasiswaController::class, 'show'])->name('mahasiswa.absensi');
+
+        // Route untuk halaman QR scanner
+        Route::get('/absensi/qr/{absenId}/{subjectId}/{classroomId}', [AbsensiMahasiswaController::class, 'showQrScanner'])->name('mahasiswa.absensi.qr');
+
+        // Route untuk menangani absensi berdasarkan hasil pemindaian QR
+        Route::post('/absensi/qr-submit', [AbsensiMahasiswaController::class, 'submitQr'])->name('absensi.qr.submit');
+
+        Route::get('/absensi/qr', [AbsensiMahasiswaController::class, 'showQrScannerWithoutId'])->name('mahasiswa.absensi.qr.test');
+        
+        Route::get('/mahasiswa/absensi/check-time', [AbsensiMahasiswaController::class, 'checkAbsensiTime'])->name('mahasiswa.absensi.check-time');
+
+
+        // Route untuk profle
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        Route::post('/profile/upload-image', [ProfileController::class, 'uploadImage'])->name('profile.upload_image');
     });
 });
+
 
 //admin routes
 Route::middleware(['auth', 'verified', 'rolemanager:admin'])->group(function () {
@@ -36,20 +58,20 @@ Route::middleware(['auth', 'verified', 'rolemanager:admin'])->group(function () 
 
         Route::controller(ClassController::class)->group(function(){
             Route::get('/class/create', 'index')->name('class.create');
-            Route::post('/class/store', 'store')->name('class.store'); // Route untuk menyimpan kelas
+            Route::post('/class/store', 'store')->name('class.store'); 
             Route::get('/class/manage', 'manage_class')->name('class.manage');
-            Route::get('/class/edit/{id}', 'edit')->name('class.edit'); // Route untuk form edit
-            Route::put('/class/update/{id}', 'update')->name('class.update'); // Route untuk update kelas
-            Route::delete('/class/delete/{id}', 'destroy')->name('class.destroy'); // Route untuk menghapus kelas
+            Route::get('/class/edit/{id}', 'edit')->name('class.edit'); 
+            Route::put('/class/update/{id}', 'update')->name('class.update'); 
+            Route::delete('/class/delete/{id}', 'destroy')->name('class.destroy'); 
         });
 
         Route::controller(SubjectController::class)->group(function() {
             Route::get('/subject/create', 'index')->name('subject.create');
             Route::post('/subject/store', 'store')->name('subject.store');
             Route::get('/subject/manage', 'manage_subject')->name('subject.manage');
-            Route::get('/subject/{id}/edit', 'edit')->name('subject.edit'); // Route untuk edit subject
-            Route::put('/subject/{id}',     'update')->name('subject.update'); // Route untuk update subject
-            Route::delete('/subject/{id}', 'destroy')->name('subject.destroy'); // Route untuk menghapus subject
+            Route::get('/subject/{id}/edit', 'edit')->name('subject.edit'); 
+            Route::put('/subject/{id}',     'update')->name('subject.update'); 
+            Route::delete('/subject/{id}', 'destroy')->name('subject.destroy'); 
         });
 
         Route::controller(UserController::class)->group(function(){
@@ -64,7 +86,7 @@ Route::middleware(['auth', 'verified', 'rolemanager:admin'])->group(function () 
     });
 });
 
-//dosen routes
+//route dosen
 Route::middleware(['auth', 'verified', 'rolemanager:dosen'])->group(function () {
     Route::prefix('dosen')->group(function(){
         Route::controller(DosenMainController::class)->group(function(){
@@ -72,21 +94,44 @@ Route::middleware(['auth', 'verified', 'rolemanager:dosen'])->group(function () 
             Route::get('/settings', 'setting')->name('dosen.settings');
             Route::get('/jadwal', 'jadwal')->name('dosen.jadwal');
         });
-
-        Route::controller(AbsenController::class)->group(function(){
-            Route::get('/absen/create', 'create')->name('absen.create');
-            Route::post('/absen/store','store')->name('absen.store');
-            Route::get('/absen', 'index')->name('absen.absensi');
-        });
     });
 });
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::post('/profile/upload-image', [ProfileController::class, 'uploadImage'])->name('profile.upload_image');
+// routes absensi dosen
+Route::middleware(['auth', 'verified', 'rolemanager:dosen'])->group(function () {
+    Route::prefix('dosen')->group(function () {
+        Route::get('/absensi/create', [AbsensiDosenController::class, 'create'])->name('absensi.create');
+        Route::post('/absensi/store', [AbsensiDosenController::class, 'store'])->name('absensi.store');
+        Route::get('/absensi', [AbsensiDosenController::class, 'index'])->name('absensi.index');
+        Route::get('/absensi/subject/{id}', [AbsensiDosenController::class, 'show'])->name('dosen.absensi'); 
+        Route::get('/absensi/detail/{id}', [AbsensiDosenController::class, 'detail'])->name('dosen.absensi.detail');
+        // Route untuk edit absensi
+        Route::get('/absensi/{id}/edit', [AbsensiDosenController::class, 'edit'])->name('absensi.edit');
+        // Route untuk update absensi
+        Route::put('/absensi/{id}', [AbsensiDosenController::class, 'update'])->name('absensi.update');
+        });
+        // Route untuk detail absensi
+        Route::get('/absensi/{id}', [AbsensiDosenController::class, 'show'])->name('absensi.show');
+        // Route untuk update status absensi
+        Route::put('/absensi/{id}/update', [AbsensiDosenController::class, 'updateStatus'])->name('absensi.updateStatus');
+        Route::put('/dosen/absensi/updateAll', [AbsensiDosenController::class, 'updateAll'])->name('absensi.updateAll');
+
+        // Route untuk menampilkan detail absensi
+        Route::get('/absensi/detail/{absenId}/{subject_id}/{classroom_id}', [AbsensiDosenController::class, 'detail'])->name('absensi.detail');
+
+       // Rute untuk update semua absensi dengan tambahan user_id sebagai parameter
+        Route::put('/absensi/update-all/{absenId}/{subject_id}/{classroom_id}/{user_id}', [AbsensiDosenController::class, 'updateAllAbsensi'])->name('absensi.updateAll');
+
+        Route::delete('absensi/{id}', [AbsensiDosenController::class, 'destroy'])->name('absensi.destroy');
 });
+    
+// //route profile
+// Route::middleware('auth')->group(function () {
+//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+//     Route::get('/mahasiswa/profile', [ProfileController::class, 'edit'])->name('profile');
+//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+//     Route::post('/profile/upload-image', [ProfileController::class, 'uploadImage'])->name('profile.upload_image');
+// });
 
 require __DIR__.'/auth.php';

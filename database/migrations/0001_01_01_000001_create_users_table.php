@@ -11,38 +11,34 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Tabel Users
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->tinyInteger('role')->default(2);
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->foreignId('class_id')->nullable()->constrained('classrooms')->onDelete('set null');
-            $table->string('batch_year')->nullable();
-            $table->string('status')->default('active');
-            // Kolom untuk menyimpan path gambar QR code
-            $table->string('qr_code')->nullable();
-            $table->rememberToken();
-            $table->timestamps();
+            $table->id(); // Primary key
+            $table->string('name'); // Nama user
+            $table->string('email')->unique(); // Email unik
+            $table->tinyInteger('role')->default(2); // Peran user, default 2 (misalnya mahasiswa)
+            $table->timestamp('email_verified_at')->nullable(); // Verifikasi email
+            $table->string('password'); // Password
+            $table->foreignId('class_id')->nullable()->constrained('classrooms')->onDelete('set null'); // Relasi ke classrooms
+            $table->string('batch_year')->nullable(); // Tahun angkatan
+            $table->string('status')->default('active'); // Status user, default aktif
+            $table->string('qr_code')->nullable(); // Path QR code
+            $table->rememberToken(); // Token remember
+            $table->timestamps(); // Timestamps
         });
 
-        // Tabel Password Reset Tokens
         Schema::create('password_reset_tokens', function (Blueprint $table) {
-            $table->string('email')->primary();
-            $table->string('token');
-            $table->timestamp('created_at')->nullable();
+            $table->string('email')->primary(); // Email untuk reset
+            $table->string('token'); // Token reset
+            $table->timestamp('created_at')->nullable(); // Timestamp dibuat
         });
 
-        // Tabel Sessions
         Schema::create('sessions', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade'); // tambahkan foreign key dengan cascade
-            $table->string('ip_address', 45)->nullable();
-            $table->text('user_agent')->nullable();
-            $table->longText('payload');
-            $table->integer('last_activity')->index();
+            $table->string('id')->primary(); // ID sesi
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade'); // Relasi ke users
+            $table->string('ip_address', 45)->nullable(); // Alamat IP
+            $table->text('user_agent')->nullable(); // User agent
+            $table->longText('payload'); // Payload data
+            $table->integer('last_activity')->index(); // Aktivitas terakhir
         });
     }
 

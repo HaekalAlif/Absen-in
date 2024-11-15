@@ -14,11 +14,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'class_id',      // Kolom class_id
+        'class_id',      // Kolom class_id untuk menghubungkan ke Classroom
         'batch_year',    // Kolom batch_year
         'status',        // Kolom status
         'qr_code',       // Kolom untuk menyimpan path QR code
-        'role',          // Kolom untuk menyimpan role user (mahasiswa atau dosen)
+        'role',          // Kolom role untuk menyimpan apakah user mahasiswa atau dosen
     ];
 
     protected $hidden = [
@@ -31,9 +31,31 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    // Relasi dengan model Classroom
     public function classroom()
     {
         return $this->belongsTo(Classroom::class, 'class_id');
     }
+
+    public function subjects()
+    {
+        return $this->belongsToMany(Subject::class, 'subject_user', 'user_id', 'subject_id');
+    }
+
+    // Relasi ke model Classroom untuk dosen (dosen memiliki banyak kelas)
+    public function classroomsAsDosen()
+    {
+        return $this->hasMany(Classroom::class, 'dosen_id');
+    }
+
+    // app/Models/User.php
+    public function taughtSubjects()
+    {
+        return $this->hasMany(Subject::class, 'user_id');
+    }
+
+    public function attendanceRecords()
+    {
+        return $this->hasMany(Absensi::class, 'user_id');
+    }
+
 }
