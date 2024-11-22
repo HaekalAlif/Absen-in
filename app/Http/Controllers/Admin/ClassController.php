@@ -28,17 +28,20 @@ class ClassController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'batch_year' => 'required|integer',
+            'tahun' => 'required|string|max:255',  // Validasi untuk kolom tahun
         ]);
 
         // Menyimpan data kelas baru
         Classroom::create([
             'name' => $request->name,
             'batch_year' => $request->batch_year,
+            'tahun' => $request->tahun,  // Menambahkan tahun ke dalam database
         ]);
 
         // Redirect ke halaman manajemen kelas dengan pesan sukses
         return redirect()->route('class.manage')->with('success', 'Kelas berhasil ditambahkan');
     }
+
 
 
     // Menampilkan form untuk mengedit kelas
@@ -54,14 +57,16 @@ class ClassController extends Controller
         // Validasi input
         $request->validate([
             'name' => 'required|string|max:255',
-            'batch_year' => 'required|integer', // Ganti year dengan batch_year
+            'batch_year' => 'required|integer',
+            'tahun' => 'required|string|max:255',  // Validasi untuk kolom tahun
         ]);
 
         // Temukan kelas dan update datanya
         $classroom = Classroom::findOrFail($id);
         $classroom->update([
             'name' => $request->name,
-            'batch_year' => $request->batch_year, // Ganti year dengan batch_year
+            'batch_year' => $request->batch_year,
+            'tahun' => $request->tahun,  // Menambahkan tahun ke dalam update
         ]);
 
         // Redirect ke halaman manage dengan pesan sukses

@@ -35,7 +35,9 @@ Route::middleware(['auth', 'verified', 'rolemanager:mahasiswa'])->group(function
 
         Route::get('/absensi/qr', [AbsensiMahasiswaController::class, 'showQrScannerWithoutId'])->name('mahasiswa.absensi.qr.test');
         
-        Route::get('/mahasiswa/absensi/check-time', [AbsensiMahasiswaController::class, 'checkAbsensiTime'])->name('mahasiswa.absensi.check-time');
+        Route::post('/absensi/check-time', [AbsensiMahasiswaController::class, 'checkAbsensiTime'])->name('mahasiswa.absensi.check-time');
+
+        Route::post('/absensi/qr/validate', [AbsensiMahasiswaController::class, 'validateQr'])->name('absensi.qr.validate');
 
 
         // Route untuk profle
@@ -81,7 +83,8 @@ Route::middleware(['auth', 'verified', 'rolemanager:admin'])->group(function () 
             Route::get('user/edit/{id}',  'edit')->name('user.edit');
             Route::put('user/update/{id}',  'update')->name('user.update');
             Route::delete('user/destroy/{id}', 'destroy')->name('user.destroy');   
-            Route::get('user/qr-code/{id}','showQrCode')->name('user.qr_code');     
+            Route::get('user/qr-code/{id}','showQrCode')->name('user.qr_code'); 
+            Route::get('/users',  'index')->name('user.index');
         });
     });
 });

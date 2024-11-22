@@ -39,7 +39,7 @@
                     </a>
                 </li>
 
-            @if(Auth::user()->role == 1) {{-- Sidebar khusus untuk dosen --}}
+            @if(Auth::user()->role == 1) 
 
                 <li class="sidebar-item {{ request()->routeIs('dosen.jadwal') ? 'active' : '' }}">
                     <a class="sidebar-link" href="{{ route('dosen.jadwal') }}">

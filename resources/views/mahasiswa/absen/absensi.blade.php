@@ -33,19 +33,13 @@
                                     @if($item->already_attended)
                                         <button class="btn btn-success" disabled>Sudah Absen</button>
                                     @else
-                                        <a id="absenButton" 
-                                           href="{{ route('mahasiswa.absensi.qr', [
-                                               'absenId' => $item->id, 
-                                               'subjectId' => $subject->id, 
-                                               'classroomId' => $user->classroom->id
-                                           ]) }}" 
-                                           class="btn btn-danger"
+                                        <button id="absenButton{{ $item->id }}" class="btn btn-danger"
                                            data-start-time="{{ $item->start_time }}"
                                            data-end-time="{{ $item->end_time }}"
                                            data-date="{{ $item->date }}"
                                            data-absensi-id="{{ $item->id }}">
                                             Absen
-                                        </a>
+                                        </button>
                                     @endif
                                 @else
                                     @if($item->already_attended)
@@ -64,59 +58,57 @@
         @endisset
     </div>
 
-    @section('scripts')
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <script>
-            // Fungsi untuk mendapatkan waktu server melalui AJAX
-            function checkAbsensiTime(absensiId, startTime, endTime, absensiDate) {
-                $.ajax({
-                    url: "{{ route('mahasiswa.absensi.check-time') }}", // Gantilah dengan rute yang sesuai
-                    method: "GET",
-                    data: {
-                        absensi_id: absensiId,
-                        start_time: startTime,
-                        end_time: endTime,
-                        date: absensiDate
-                    },
-                    success: function(response) {
-                        if (response.status === 'invalid') {
-                            // Tampilkan SweetAlert jika waktu absen sudah lewat
-                            Swal.fire({
-                                icon: 'warning',
-                                title: 'Waktu Absen Telah Berakhir',
-                                text: 'Jam absensi telah berakhir atau belum dimulai.',
-                                confirmButtonText: 'OK'
-                            }).then(() => {
-                                // Setelah SweetAlert ditutup, kembali ke halaman absensi
-                                window.location.href = window.location.href;
-                            });
-                        } else {
-                            // Jika waktu valid, lanjutkan ke halaman absen
-                            window.location.href = response.url;
-                        }
-                    },
-                    error: function() {
+@foreach($absensi as $item)
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const absensiButton = document.getElementById('absenButton{{ $item->id }}');
+            if(absensiButton) {
+                absensiButton.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    const absensiId = this.getAttribute('data-absensi-id');
+                    const startTime = this.getAttribute('data-start-time');
+                    const endTime = this.getAttribute('data-end-time');
+                    const absensiDate = this.getAttribute('data-date');
+
+                    // Mendapatkan waktu Indonesia (WIB)
+                    const currentDateTime = new Date();
+                    const currentDate = currentDateTime.toISOString().split('T')[0]; // Format: DD/MM/YYYY
+                    const currentTime = currentDateTime.toLocaleTimeString('en-GB', { hour12: false }); // Format: HH:mm:ss
+
+                    // Memeriksa apakah tanggal sekarang sama dengan tanggal absensi
+                    if (currentDate !== absensiDate) {
                         Swal.fire({
-                            icon: 'error',
-                            title: 'Terjadi Kesalahan',
-                            text: 'Gagal memeriksa waktu absensi.',
+                            icon: 'warning',
+                            title: 'Tanggal Tidak Sesuai',
+                            text: 'Tanggal absensi tidak sesuai dengan tanggal sekarang.',
+                            confirmButtonText: 'OK'
+                        });
+                        return; // Hentikan eksekusi jika tanggal tidak sesuai
+                    }
+
+                    // Memeriksa apakah waktu sekarang berada dalam rentang waktu (start_time <= current_time <= end_time)
+                    if (currentTime >= startTime && currentTime <= endTime) {
+                        // Jika waktu sekarang valid, arahkan ke halaman QR Scanner
+                        window.location.href = "{{ route('mahasiswa.absensi.qr', [
+                            'absenId' => '__absenId__',
+                            'subjectId' => $subject->id,
+                            'classroomId' => $user->classroom->id
+                        ]) }}".replace('__absenId__', absensiId);
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Waktu Absen Tidak Valid',
+                            text: 'Waktu absensi sudah berakhir atau belum dimulai.',
                             confirmButtonText: 'OK'
                         });
                     }
                 });
             }
+        });
+    </script>
+@endforeach
 
-            document.querySelectorAll('#absenButton').forEach(button => {
-                button.addEventListener('click', function(e) {
-                    const absensiId = button.getAttribute('data-absensi-id');
-                    const startTime = button.getAttribute('data-start-time').split(':');
-                    const endTime = button.getAttribute('data-end-time').split(':');
-                    const absensiDate = button.getAttribute('data-date');
-
-                    checkAbsensiTime(absensiId, startTime, endTime, absensiDate);
-                    e.preventDefault(); // Mencegah pengalihan halaman langsung
-                });
-            });
-        </script>
-    @endsection
 @endsection

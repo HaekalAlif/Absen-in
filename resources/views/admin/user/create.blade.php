@@ -53,7 +53,7 @@ Add User - Admin Panel
             </select>
         </div>
 
-        <button type="submit" class="btn btn-primary">Simpan</button>
+        <button type="submit" class="btn btn-primary mt-4">Simpan</button>
     </form>
 </div>
 @endsection

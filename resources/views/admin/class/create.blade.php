@@ -9,24 +9,34 @@ Create Class - Admin Panel
     <h3>Create New Class</h3>
     
     @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
+        <script>
+            Swal.fire({
+                title: 'Success!',
+                text: '{{ session('success') }}',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        </script>
     @endif
 
     <form action="{{ route('class.store') }}" method="POST">
         @csrf
         <div class="mb-3">
-            <label for="name" class="form-label">Class Name</label>
+            <label for="name" class="form-label">Kelas</label>
             <input type="text" class="form-control" id="name" name="name" required>
         </div>
 
         <div class="mb-3">
-            <label for="year" class="form-label">Batch Year</label>
+            <label for="batch_year" class="form-label">Angkatan</label>
             <input type="number" class="form-control" id="batch_year" name="batch_year" required>
         </div>
 
-        <button type="submit" class="btn btn-primary">Add Class</button>
+        <div class="mb-3">
+            <label for="tahun" class="form-label">Tahun Ajaran</label>
+            <input type="text" class="form-control" id="tahun" name="tahun" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Simpan</button>
     </form>
 </div>
 @endsection

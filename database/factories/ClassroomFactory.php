@@ -12,8 +12,8 @@ class ClassroomFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->word,
-            'batch_year' => $this->faker->year, // Sesuaikan dengan struktur tabel Anda
+            'name' => $this->faker->word, // Nama kelas
+            'batch_year' => $this->faker->year, // Angkatan kelas
         ];
     }
 }

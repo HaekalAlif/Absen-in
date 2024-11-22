@@ -58,14 +58,13 @@
                             Mata Kuliah Saya
                         </li>
                         @php
-                            // Ambil kelas mahasiswa saat ini
                             $classroom = Auth::user()->classroom;
                             $subjects = $classroom ? $classroom->subjects : collect();
                         @endphp
 
-                        @if($subjects->isNotEmpty())
+                       @if($subjects->isNotEmpty())
                             @foreach($subjects as $subject)
-                                <li class="sidebar-item">
+                                <li class="sidebar-item {{ request()->routeIs('mahasiswa.absensi') && request()->route('id') == $subject->id ? 'active' : '' }}">
                                     <a class="sidebar-link" href="{{ route('mahasiswa.absensi', $subject->id) }}">
                                         <i class="align-middle" data-feather="book"></i>
                                         <span class="align-middle">{{ $subject->name }}</span>
@@ -77,6 +76,7 @@
                                 <span class="sidebar-link text-muted">Tidak ada mata kuliah yang tersedia.</span>
                             </li>
                         @endif
+
 
                         <li class="sidebar-item {{ request()->routeIs('mahasiswa.settings') ? 'active' : '' }}">
                             <a class="sidebar-link" href="{{ route('mahasiswa.settings') }}">
@@ -103,10 +103,19 @@
 							</a>
 
 							<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
-								<span class="text-dark">{{ Auth::user()->name }}</span>
-							</a>
+                            
+                            @if(Auth::user()->profile_image)
+                                <img src="{{ asset('profile_images/' . Auth::user()->profile_image) }}" alt="Profile Image" class="rounded-circle" width="30" height="30">
+                            @else
+                                <img src="{{ asset('profile_images/default.png') }}" alt="Default Profile Image" class="rounded-circle" width="30" height="30">
+                            @endif
+                            <span class="text-dark">
+                                {{ Auth::user()->name }}
+                            </span>
+                        </a>
+
 							<div class="dropdown-menu dropdown-menu-end">
-								<a class="dropdown-item" href="profile"><i class="align-middle me-1" data-feather="user"></i> Profile</a>
+								<a class="dropdown-item" href={{ route('profile') }}><i class="align-middle me-1" data-feather="user"></i> Profile</a>
 								<div class="dropdown-divider"></div>
 								<!-- Authentication -->
 								<form method="POST" action="{{ route('logout') }}">
@@ -162,11 +171,9 @@
 <script>
 
 
-    // Pastikan untuk memulai hanya setelah DOM sepenuhnya dimuat
     window.addEventListener('DOMContentLoaded', (event) => {
-        // Mendapatkan CSRF token dan menyimpannya di localStorage
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        localStorage.setItem('csrf-token', csrfToken); // Simpan di localStorage
+        localStorage.setItem('csrf-token', csrfToken); 
 
         // Cek data classroom dan subjects
         let classroom = @json($classroom);
@@ -184,15 +191,6 @@
         } else {
             console.log("Subjects:", subjects);
         }
-
-        // Fungsi untuk menampilkan waktu saat ini di console setiap detik
-        function logCurrentTime() {
-            const currentTime = new Date();
-            console.log("Current Time:", currentTime.toLocaleString());
-        }
-
-        // Log waktu setiap detik
-        setInterval(logCurrentTime, 1000); // Setiap detik
     });
 
 

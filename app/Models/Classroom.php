@@ -13,6 +13,7 @@ class Classroom extends Model
         'name',         // Nama kelas
         'batch_year',   // Angkatan (tahun batch)
         'user_id',      // Foreign key ke User (dosen yang memiliki kelas ini)
+        'tahun'
     ];
 
     // Relasi ke model User (mahasiswa dalam kelas ini)

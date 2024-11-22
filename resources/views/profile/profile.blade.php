@@ -1,7 +1,9 @@
 @extends('mahasiswa.layouts.layout')
+
 @section('mahasiswa_page_title')
 Settings - Mahasiswa Panel
 @endsection
+
 @section('mahasiswa_layout')
 <div class="container my-5">
     <h1 class="text-center mb-4">Profil Pengguna</h1>
@@ -74,5 +76,33 @@ Settings - Mahasiswa Panel
     @else
         <p class="text-muted text-center">QR Code tidak tersedia untuk dosen dan admin.</p>
     @endif
+
+    <!-- Form Ganti Password -->
+    <div class="mt-5">
+        <h3 class="text-center mb-4">Ganti Password</h3>
+
+        <form action="{{ route('password.update') }}" method="POST">
+            @csrf
+            @method('PUT')
+
+            <div class="mb-3">
+                <label for="current_password" class="form-label">Password Lama</label>
+                <input type="password" name="current_password" id="current_password" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Password Baru</label>
+                <input type="password" name="password" id="password" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="password_confirmation" class="form-label">Konfirmasi Password Baru</label>
+                <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Ganti Password</button>
+        </form>
+    </div>
+
 </div>
 @endsection

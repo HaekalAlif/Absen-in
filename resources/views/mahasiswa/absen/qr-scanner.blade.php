@@ -44,12 +44,11 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('js/html5-qrcode.min.js') }}"></script>
 
-
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const RADIUS_KM = 4; // Radius 1 km
-            const CAMPUS_LAT = -7.562139308357166; // Ganti dengan latitude kampus Anda
-            const CAMPUS_LNG =  110.83612721701697; // Ganti dengan longitude kampus Anda
+            const CAMPUS_LAT = -7.5629267945566845; // latitude kampus
+            const CAMPUS_LNG =  110.83562136627968; // ongitude kampus 
 
             // Fungsi untuk menghitung jarak menggunakan Haversine formula
             function calculateDistance(lat1, lon1, lat2, lon2) {
@@ -60,7 +59,7 @@
                           Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
                           Math.sin(dLon / 2) * Math.sin(dLon / 2);
                 const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-                return R * c; // Jarak dalam kilometer
+                return R * c; 
             }
 
             // Fungsi untuk memeriksa lokasi mahasiswa
@@ -74,7 +73,6 @@
                         console.log('Jarak ke kampus:', distance, 'km');
 
                         if (distance <= RADIUS_KM) {
-                            // Tampilkan scanner jika dalam radius
                             Swal.fire({
                                 title: 'Berhasil!',
                                 text: 'Anda berada dalam radius 1 km dari kampus. Silakan lanjutkan absen.',
@@ -119,15 +117,33 @@
                     if (isScanning) return;
                     isScanning = true;
 
-                    Swal.fire({
-                        title: 'QR Terdeteksi',
-                        text: 'Memproses absensi...',
-                        icon: 'info',
-                        showConfirmButton: false,
-                        timer: 2000
-                    });
+                    console.log("Data QR Code:", decodedText);
 
-                    setTimeout(() => {
+                    // Kirim email dari QR Code ke server untuk validasi
+                    fetch("{{ route('absensi.qr.validate') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        body: JSON.stringify({
+                            qr_code: decodedText // Hasil QR Code adalah email
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            Swal.fire({
+                                title: 'QR Tidak Valid!',
+                                text: data.error,
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                            isScanning = false;
+                            return;
+                        }
+
+                        // Jika valid, lanjutkan ke submit QR
                         fetch("{{ route('absensi.qr.submit') }}", {
                             method: 'POST',
                             headers: {
@@ -145,7 +161,7 @@
                         .then(data => {
                             Swal.fire({
                                 title: 'Absensi Berhasil!',
-                                text: 'Data absensi Anda telah disimpan.',
+                                text: data.message,
                                 icon: 'success',
                                 confirmButtonText: 'OK'
                             }).then(() => {
@@ -159,12 +175,22 @@
                                 icon: 'error',
                                 confirmButtonText: 'OK'
                             });
-                        })
-                        .finally(() => {
-                            setTimeout(() => { isScanning = false; }, 3000);
                         });
-                    }, 2000);
-                }
+                    })
+                    .catch(error => {
+                        Swal.fire({
+                            title: 'Kesalahan',
+                            text: 'Gagal memvalidasi QR.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    })
+                    .finally(() => {
+                        setTimeout(() => { isScanning = false; }, 3000);
+                    });
+}
+
+
 
                 function onScanFailure(error) {
                     console.warn(`Code scan error = ${error}`);

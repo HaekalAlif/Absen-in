@@ -14,43 +14,34 @@ use Carbon\Carbon;
 class AbsensiMahasiswaController extends Controller
 {
     public function show($id)
-{
-    // Ambil data user yang sedang login
-    $user = Auth::user();
+    {
+        $user = Auth::user();
 
-    // Ambil mata kuliah berdasarkan ID
-    $subject = Subject::where('id', $id)->firstOrFail();
+        $subject = Subject::where('id', $id)->firstOrFail();
 
-    // Ambil semua absensi yang terkait dengan mata kuliah ini
-    $absensi = Absensi::where('subject_id', $id)->get();
+        $absensi = Absensi::where('subject_id', $id)->get();
 
-    // Loop melalui setiap absensi dan cek apakah user sudah absen
-    foreach ($absensi as $item) {
-        $alreadyAttended = RekapAbsensi::where('user_id', $user->id)
-            ->where('absen_id', $item->id)
-            ->where('subject_id', $subject->id)
-            ->where('classroom_id', $user->classroom->id)
-            ->exists();
+        foreach ($absensi as $item) {
+            $alreadyAttended = RekapAbsensi::where('user_id', $user->id)
+                ->where('absen_id', $item->id)
+                ->where('subject_id', $subject->id)
+                ->where('classroom_id', $user->classroom->id)
+                ->exists();
 
-        // Menambahkan atribut baru untuk menentukan status kehadiran
-        $item->already_attended = $alreadyAttended;
+            $item->already_attended = $alreadyAttended;
+        }
+
+        return view('mahasiswa.absen.absensi', compact('subject', 'absensi', 'user'));
     }
-
-    return view('mahasiswa.absen.absensi', compact('subject', 'absensi', 'user'));
-}
-
 
     public function index(Request $request)
     {
         $user = Auth::user();
 
-        // Ambil mata kuliah yang dimiliki oleh kelas mahasiswa yang sedang login
         $subjects = $user->classroom ? $user->classroom->subjects : collect();
 
-        // Ambil absensi yang sudah ada
         $absensi = collect();
 
-        // Jika ada mata kuliah yang dipilih, tampilkan absensi
         if ($request->has('subject_id')) {
             $absensi = Absensi::where('subject_id', $request->subject_id)
                               ->get();
@@ -59,7 +50,6 @@ class AbsensiMahasiswaController extends Controller
         return view('mahasiswa.absen.absensi', compact('subjects', 'absensi'));
     }
 
-    // Menampilkan halaman QR Scanner
     public function showQrScanner($absenId, $subjectId, $classroomId)
     {
         try {
@@ -73,53 +63,71 @@ class AbsensiMahasiswaController extends Controller
         }
     }
 
+    public function validateQr(Request $request)
+    {
+        try {
+            $qrCode = $request->json('qr_code');
+            $userEmail = auth()->user()->email; 
+
+            if (!filter_var($qrCode, FILTER_VALIDATE_EMAIL)) {
+                return response()->json(['error' => 'Format QR Code tidak valid'], 400);
+            }
+
+            if ($qrCode !== $userEmail) {
+                return response()->json(['error' => 'QR Code tidak valid untuk pengguna ini'], 400);
+            }
+
+            return response()->json(['message' => 'QR Code valid'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
    public function submitQr(Request $request)
     {
         try {
-            // Ambil data dari request
+            $qrValidation = $this->validateQr($request);
+            if ($qrValidation->status() !== 200) {
+                return $qrValidation; 
+            }
+
             $subjectId = $request->json('subject_id');
             $classroomId = $request->json('classroom_id');
             $qrCode = $request->json('qr_code');
-            $userId = auth()->user()->id; // Mendapatkan ID pengguna yang sedang login
-            $date = now(); // Mendapatkan tanggal dan waktu saat ini
+            $userId = auth()->user()->id; 
+            $date = now(); 
 
-            // Dapatkan absen berdasarkan `subject_id` dan `classroom_id`
             $absen = Absensi::where('subject_id', $subjectId)
                 ->where('classroom_id', $classroomId)
-                ->where('id', $request->json('absen_id')) // Pastikan absen_id diambil dari request
+                ->where('id', $request->json('absen_id')) 
                 ->first();
 
             if (!$absen) {
                 return response()->json(['error' => 'Data absen tidak ditemukan'], 404);
             }
 
-            // Ambil `absen_id` yang spesifik
             $absenId = $absen->id;
 
-            // Cek apakah pengguna sudah pernah absen dengan `absen_id` ini saja
             $rekapAbsensi = RekapAbsensi::where('user_id', $userId)
-                ->where('absen_id', $absenId) // Hanya periksa berdasarkan `absen_id`
+                ->where('absen_id', $absenId)
                 ->first();
 
-            // Jika rekap absensi sudah ada untuk absen_id ini, berikan respons error
             if ($rekapAbsensi) {
                 return response()->json(['error' => 'Anda sudah absen untuk absen ini'], 400);
             }
 
-            // Jika rekap absensi belum ada, buat data baru
             RekapAbsensi::create([
                 'user_id' => $userId,
-                'absen_id' => $absenId,  // Simpan absen_id yang diambil dari tabel absensi
+                'absen_id' => $absenId,  
                 'subject_id' => $subjectId,
                 'classroom_id' => $classroomId,
                 'qr_code' => $qrCode,
-                'attendance_status' => 'hadir', // Status hadir
-                'date' => $date, // Menambahkan tanggal absensi
+                'attendance_status' => 'hadir', 
+                'date' => $date, 
             ]);
 
             return response()->json(['message' => 'Absensi berhasil ditambahkan'], 200);
         } catch (\Exception $e) {
-            // Jika ada error, tangkap dan kembalikan pesan error
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
@@ -131,40 +139,21 @@ class AbsensiMahasiswaController extends Controller
 
     public function checkAbsensiTime(Request $request)
     {
-        $absensiId = $request->absensi_id;
-        $startTime = $request->start_time;
-        $endTime = $request->end_time;
-        $absensiDate = $request->date;
+        $absensi = Absensi::find($request->absensi_id);
 
-        // Mengonversi waktu mulai dan waktu akhir ke format waktu yang valid
-        $startTime = Carbon::createFromFormat('H:i', $startTime);
-        $endTime = Carbon::createFromFormat('H:i', $endTime);
-        $absensiDate = Carbon::createFromFormat('Y-m-d', $absensiDate);
-
-        // Gabungkan tanggal dan waktu menjadi datetime penuh
-        $startDateTime = $absensiDate->setTime($startTime->hour, $startTime->minute);
-        $endDateTime = $absensiDate->setTime($endTime->hour, $endTime->minute);
-
-        // Ambil waktu server sekarang
-        $now = Carbon::now();
-
-        // Cek apakah waktu sekarang di luar rentang waktu absensi
-        if ($now->lt($startDateTime) || $now->gt($endDateTime)) {
-            return response()->json([
-                'status' => 'invalid',
-                'message' => 'Waktu Absen Telah Berakhir',
-            ]);
+        if (!$absensi) {
+            return response()->json(['status' => 'invalid']);
         }
 
-        // Jika waktu absensi valid, arahkan ke URL absen
-        return response()->json([
-            'status' => 'valid',
-            'url' => route('mahasiswa.absensi.qr', [
-                'absenId' => $absensiId,
-                'subjectId' => $request->subject_id,
-                'classroomId' => $request->classroom_id
-            ])
-        ]);
+        $currentTime = now();
+        $startTime = Carbon::parse($request->start_time);
+        $endTime = Carbon::parse($request->end_time);
+
+        if ($currentTime->between($startTime, $endTime)) {
+            return response()->json(['status' => 'valid']);
+        }
+
+        return response()->json(['status' => 'invalid']);
     }
 
 }

@@ -22,6 +22,7 @@ Manage Classes - Admin Panel
                 <th>ID</th>
                 <th>Class Name</th>
                 <th>Batch Year</th>
+                <th>Tahun Ajaran</th> <!-- Kolom Tahun Ajaran ditambahkan -->
                 <th>Actions</th>
             </tr>
         </thead>
@@ -31,6 +32,7 @@ Manage Classes - Admin Panel
                 <td>{{ $class->id }}</td>
                 <td>{{ $class->name }}</td>
                 <td>{{ $class->batch_year }}</td>
+                <td>{{ $class->tahun }}</td> <!-- Menampilkan nilai tahun ajaran -->
                 <td>
                     <a href="{{ route('class.edit', $class->id) }}" class="btn btn-warning btn-sm">Edit</a>
                     <form action="{{ route('class.destroy', $class->id) }}" method="POST" style="display:inline;">

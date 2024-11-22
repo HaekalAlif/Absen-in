@@ -20,11 +20,28 @@ class UserController extends Controller
     }
 
     // Menampilkan daftar user yang telah dibuat
-    public function manage_user()
+     public function manage_user(Request $request)
     {
-        $users = User::with('classroom')->get(); // Ambil semua user beserta relasi classroom
-        return view('admin.user.manage', compact('users'));
+        $query = User::with('classroom');
+
+        if ($request->has('role') && $request->role !== null) {
+            $query->where('role', $request->role);
+        }
+
+        if ($request->has('class_id') && $request->class_id !== null) {
+            $query->where('class_id', $request->class_id);
+        }
+
+        if ($request->has('batch_year') && $request->batch_year !== null) {
+            $query->where('batch_year', $request->batch_year);
+        }
+
+        $users = $query->get();
+        $classrooms = Classroom::all();
+
+        return view('admin.user.manage', compact('users', 'classrooms'));
     }
+
 
         // Menyimpan user baru ke database
     public function store(Request $request)
@@ -110,10 +127,16 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail($id);
-        $user->delete(); // Hapus user dari database
 
-        return redirect()->route('user.manage')->with('success', 'User berhasil dihapus!');
+        // Hapus data terkait di tabel rekap_absensi
+        $user->rekap_absensi()->delete(); // Hapus semua data rekap_absensi terkait dengan user
+
+        // Hapus user
+        $user->delete();
+
+        return redirect()->route('user.manage')->with('success', 'User beserta data terkait berhasil dihapus!');
     }
+
 
     // Menampilkan QR code pengguna
     public function showQrCode($id)
