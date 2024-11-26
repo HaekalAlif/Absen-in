@@ -20,6 +20,8 @@
 	<link href="{{ asset('admin_asset/css/app.css') }}" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+	@yield('style')	
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
 
@@ -51,19 +53,13 @@
 
                 {{-- Dropdown untuk mata kuliah yang diajarkan oleh dosen --}}
 				@foreach(Auth::user()->taughtSubjects as $subject)
-					<li class="sidebar-item {{ request()->routeIs('dosen.absensi', $subject->id) ? 'active' : '' }}">
+					<li class="sidebar-item {{ request()->routeIs('dosen.absensi') && request()->route('id') == $subject->id ? 'active' : '' }}">
 						<a class="sidebar-link" href="{{ route('dosen.absensi', $subject->id) }}">
 							<i class="align-middle" data-feather="book"></i>
-							<span class="align-middle">{{ $subject->name }}</span>
+							<span class="align-middle">{{ $subject->name }} - {{ $subject->classroom->name }}</span> <!-- Menambahkan nama kelas -->
 						</a>
 					</li>
 				@endforeach
-
-                <li class="sidebar-item {{ request()->routeIs('dosen.settings') ? 'active' : '' }}">
-                    <a class="sidebar-link" href="{{ route('dosen.settings') }}">
-                        <i class="align-middle" data-feather="settings"></i> <span class="align-middle">Settings</span>
-                    </a>
-                </li>
             @endif
         </ul>
     </div>
@@ -135,7 +131,7 @@
 	</div>
 
 	<script src="{{ asset('admin_asset/js/app.js') }}"></script>
-
+	@yield('scripts')	
 </body>
 
 </html>

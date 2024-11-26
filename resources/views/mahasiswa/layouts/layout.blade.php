@@ -17,6 +17,7 @@
 
 	<link href="{{ asset('admin_asset/css/app.css') }}" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    @yield('style')	
 </head>
 
 <body>
@@ -76,14 +77,6 @@
                                 <span class="sidebar-link text-muted">Tidak ada mata kuliah yang tersedia.</span>
                             </li>
                         @endif
-
-
-                        <li class="sidebar-item {{ request()->routeIs('mahasiswa.settings') ? 'active' : '' }}">
-                            <a class="sidebar-link" href="{{ route('mahasiswa.settings') }}">
-                                <i class="align-middle" data-feather="settings"></i> 
-                                <span class="align-middle">Settings</span>
-                            </a>
-                        </li>
                     @endif
                 </ul>
             </div>

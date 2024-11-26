@@ -89,36 +89,36 @@ class AbsensiDosenController extends Controller
     }
 
     public function detail($id, $subject_id, $classroom_id)
-{
-    // Ambil data dosen yang sedang login
-    $user = Auth::user();
+    {
+        // Ambil data dosen yang sedang login
+        $user = Auth::user();
 
-    // Ambil mata kuliah berdasarkan ID dan pastikan mata kuliah ini milik dosen yang sedang login
-    $subject = Subject::where('id', $subject_id)
-                      ->where('user_id', $user->id)  // Memastikan mata kuliah milik dosen yang login
-                      ->firstOrFail();
+        // Ambil mata kuliah berdasarkan ID dan pastikan mata kuliah ini milik dosen yang sedang login
+        $subject = Subject::where('id', $subject_id)
+                        ->where('user_id', $user->id)  // Memastikan mata kuliah milik dosen yang login
+                        ->firstOrFail();
 
-    // Ambil kelas yang terhubung dengan mata kuliah
-    $classroom = Classroom::findOrFail($classroom_id);
+        // Ambil kelas yang terhubung dengan mata kuliah
+        $classroom = Classroom::findOrFail($classroom_id);
 
-    // Ambil semua absensi yang ada di kelas ini berdasarkan mata kuliah dan kelas, dan hanya untuk absen_id tertentu
-    $attendanceRecords = Absensi::where('subject_id', $subject_id)
-                                ->where('classroom_id', $classroom_id)
-                                ->where('id', $id)  // Filter hanya untuk absen_id yang sesuai
-                                ->get();
+        // Ambil semua absensi yang ada di kelas ini berdasarkan mata kuliah dan kelas, dan hanya untuk absen_id tertentu
+        $attendanceRecords = Absensi::where('subject_id', $subject_id)
+                                    ->where('classroom_id', $classroom_id)
+                                    ->where('id', $id)  // Filter hanya untuk absen_id yang sesuai
+                                    ->get();
 
-    // Ambil semua mahasiswa yang terdaftar di kelas ini (role 2 sebagai mahasiswa)
-    $students = $classroom->users()->where('role', 2)->get();
+        // Ambil semua mahasiswa yang terdaftar di kelas ini (role 2 sebagai mahasiswa)
+        $students = $classroom->users()->where('role', 2)->get();
 
-    // Ambil data rekap absensi yang hanya terkait dengan absen_id, subject_id, dan classroom_id yang sesuai
-    $rekapAbsensi = RekapAbsensi::where('subject_id', $subject_id)
-                                ->where('classroom_id', $classroom_id)
-                                ->whereIn('absen_id', [$id]) // Filter berdasarkan absen_id
-                                ->get();
+        // Ambil data rekap absensi yang hanya terkait dengan absen_id, subject_id, dan classroom_id yang sesuai
+        $rekapAbsensi = RekapAbsensi::where('subject_id', $subject_id)
+                                    ->where('classroom_id', $classroom_id)
+                                    ->whereIn('absen_id', [$id]) // Filter berdasarkan absen_id
+                                    ->get();
 
-    // Kirim data ke view
-    return view('dosen.absen.detail', compact('students', 'subject', 'attendanceRecords', 'rekapAbsensi', 'classroom', 'id'));
-}
+        // Kirim data ke view
+        return view('dosen.absen.detail', compact('students', 'subject', 'attendanceRecords', 'rekapAbsensi', 'classroom', 'id'));
+    }
 
 
     // Menampilkan halaman edit absensi

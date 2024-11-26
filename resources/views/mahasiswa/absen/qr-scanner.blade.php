@@ -5,40 +5,71 @@
 @section('mahasiswa_layout')
     <h3>QR Scanner untuk Mata Kuliah: {{ $subject->name ?? 'Mata Kuliah Tidak Diketahui' }}</h3>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="p-6 bg-white shadow sm:rounded-lg">
-                <!-- Button untuk mengakses lokasi mahasiswa -->
-                <button id="location-check-btn" class="btn btn-primary mb-4">Cek Lokasi untuk Absensi</button>
+<div class="py-12">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="p-6 bg-white shadow sm:rounded-lg">
+            <!-- Button untuk mengakses lokasi mahasiswa -->
+            <button id="location-check-btn" class="btn btn-primary mb-4">
+                Cek Lokasi untuk Absensi
+            </button>
 
-                <!-- QR Reader Section -->
-                <div id="qr-reader" style="width: 50%; height: 400px; display: none;"></div>
-                <div id="qr-reader-results"></div>
-            </div>
+            <!-- QR Reader Section -->
+            <div id="qr-reader" style="width: 50%; height: 400px; display: none; margin: 0 auto;"></div>
+            <div id="qr-reader-results"></div>
         </div>
     </div>
+</div>
 
-    <style>
+<style>
+    #qr-reader {
+        border: 2px dashed #4CAF50;
+        border-radius: 8px;
+        position: relative;
+        overflow: hidden;
+        background-color: #f9f9f9;
+        margin: 0 auto; /* Memastikan elemen berada di tengah */
+    }
+
+    #qr-reader::before {
+        content: "Scanning...";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #4CAF50;
+        font-size: 20px;
+        font-weight: bold;
+        z-index: 10;
+    }
+
+    /* Responsif */
+    @media (max-width: 768px) {
         #qr-reader {
-            border: 2px dashed #4CAF50;
-            border-radius: 8px;
-            position: relative;
-            overflow: hidden;
-            background-color: #f9f9f9;
+            width: 80%; /* Mengatur ukuran QR reader agar lebih kecil pada layar kecil */
         }
+    }
 
-        #qr-reader::before {
-            content: "Scanning...";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #4CAF50;
-            font-size: 20px;
-            font-weight: bold;
-            z-index: 10;
-        }
-    </style>
+    /* Styling tombol lokasi */
+    #location-check-btn {
+        font-size: 16px;
+        padding: 10px 20px;
+        border-radius: 4px;
+        background-color: #3abef9;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    #location-check-btn:hover {
+        background-color: #277aa1;
+    }
+
+    #location-check-btn .text-muted {
+        font-size: 12px;
+    }
+</style>
+
 
     <!-- Tambahkan SweetAlert CDN -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

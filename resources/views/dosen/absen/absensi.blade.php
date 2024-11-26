@@ -22,10 +22,7 @@ Absensi - {{ $subject->name }} - Dosen Panel
         <div class="form-group">
             <label for="classroom_id">Kelas</label>
             <select name="classroom_id" id="classroom_id" class="form-control" required>
-                <option value="">-- Pilih Kelas --</option>
-                @foreach($classrooms as $class)
-                    <option value="{{ $class->id }}">{{ $class->name }} ({{ $class->batch_year }})</option>
-                @endforeach
+                <option value="{{ $subject->classroom_id }}" selected>{{ $subject->classroom->name }} ({{ $subject->classroom->batch_year }})</option>
             </select>
         </div>
         <div class="form-group">
@@ -40,7 +37,7 @@ Absensi - {{ $subject->name }} - Dosen Panel
             <label for="end_time">Waktu Selesai</label>
             <input type="time" name="end_time" id="end_time" class="form-control" required>
         </div>
-    <br>
+        <br>
         <button type="submit" class="btn btn-primary">Buat Absensi</button>
     </form>
     <br>
@@ -146,5 +143,6 @@ Absensi - {{ $subject->name }} - Dosen Panel
             });
         }
     </script>
+    
 </div>
 @endsection

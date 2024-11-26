@@ -52,11 +52,6 @@ class MahasiswaMainController extends Controller
         return view('mahasiswa.dashboard', compact('user', 'classroom', 'subjects', 'absensi', 'rekapAbsensi', 'persentaseKehadiran'));
     }
 
-
-
-
-
-
     public function faq()
     {
         return view('mahasiswa.faq');
