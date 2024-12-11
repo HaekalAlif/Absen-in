@@ -146,4 +146,20 @@ class UserController extends Controller
         return view('admin.user.qr_code', compact('user'));
     }
 
+    public function downloadQrCode($id)
+    {
+        $user = User::findOrFail($id);
+
+        // Pastikan QR code tersedia
+        if (!$user->qr_code || !file_exists(public_path($user->qr_code))) {
+            return redirect()->route('user.manage')->with('error', 'QR Code tidak ditemukan.');
+        }
+
+        // Siapkan file untuk diunduh
+        $filePath = public_path($user->qr_code);
+        $fileName = $user->name . '_QR_Code.png';
+
+        return response()->download($filePath, $fileName);
+    }
+
 }

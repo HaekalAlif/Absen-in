@@ -5,7 +5,7 @@ Settings - Mahasiswa Panel
 @endsection
 
 @section('mahasiswa_layout')
-<div class="container my-5">
+<div class="container">
     <h1 class="text-center mb-4">Profil Pengguna</h1>
 
     @if(session('success'))
@@ -38,7 +38,6 @@ Settings - Mahasiswa Panel
         <p><strong>Nama:</strong> {{ $user->name }}</p>
         <p><strong>Email:</strong> {{ $user->email }}</p>
         
-        <!-- Menampilkan informasi kelas dan tahun angkatan hanya untuk dosen dan mahasiswa -->
         @if($user->role == 1 || $user->role == 2) 
             <p><strong>Kelas:</strong> {{ $user->classroom ? $user->classroom->name : '-' }}</p>
             <p><strong>Tahun Angkatan:</strong> {{ $user->batch_year }}</p>
@@ -61,8 +60,7 @@ Settings - Mahasiswa Panel
         </p>
     </div>
 
-    <!-- QR Code dan Tombol Download -->
-    @if($user->role == 2) <!-- Cek apakah user adalah mahasiswa -->
+    @if($user->role == 2)
         <div class="text-center">
             <h4>QR Code:</h4>
             <img src="{{ asset($user->qr_code) }}" alt="QR Code" class="mb-3" width="150" height="150">

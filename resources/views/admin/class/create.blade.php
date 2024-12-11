@@ -6,7 +6,7 @@ Create Class - Admin Panel
 
 @section('admin_layout')
 <div class="container">
-    <h3>Create New Class</h3>
+    <h1>Create New Class</h1>
     
     @if(session('success'))
         <script>
@@ -36,7 +36,7 @@ Create Class - Admin Panel
             <input type="text" class="form-control" id="tahun" name="tahun" required>
         </div>
 
-        <button type="submit" class="btn btn-primary">Simpan</button>
+        <button type="submit" class="btn btn-primary" style="background-color:#00AFEF">Simpan</button>
     </form>
 </div>
 @endsection

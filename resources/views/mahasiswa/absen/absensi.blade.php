@@ -6,7 +6,6 @@
     <div class="container">
         <h2>Daftar Absensi</h2>
 
-        <!-- Jika ada mata kuliah yang dipilih -->
         @isset($subject)
             <h3>Mata Kuliah: {{ $subject->name }}</h3>
             <table class="table">
@@ -86,7 +85,7 @@
                             text: 'Tanggal absensi tidak sesuai dengan tanggal sekarang.',
                             confirmButtonText: 'OK'
                         });
-                        return; // Hentikan eksekusi jika tanggal tidak sesuai
+                        return;i
                     }
 
                     // Memeriksa apakah waktu sekarang berada dalam rentang waktu (start_time <= current_time <= end_time)

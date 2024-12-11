@@ -6,7 +6,7 @@ Manage Classes - Admin Panel
 
 @section('admin_layout')
 <div class="container">
-    <h3>Manage Classes</h3>
+    <h1>Manage Classes</h1>
 
     @if(session('success'))
         <div class="alert alert-success">
@@ -22,7 +22,7 @@ Manage Classes - Admin Panel
                 <th>ID</th>
                 <th>Class Name</th>
                 <th>Batch Year</th>
-                <th>Tahun Ajaran</th> <!-- Kolom Tahun Ajaran ditambahkan -->
+                <th>Tahun Ajaran</th> 
                 <th>Actions</th>
             </tr>
         </thead>
@@ -32,13 +32,13 @@ Manage Classes - Admin Panel
                 <td>{{ $class->id }}</td>
                 <td>{{ $class->name }}</td>
                 <td>{{ $class->batch_year }}</td>
-                <td>{{ $class->tahun }}</td> <!-- Menampilkan nilai tahun ajaran -->
+                <td>{{ $class->tahun }}</td> 
                 <td>
                     <a href="{{ route('class.edit', $class->id) }}" class="btn btn-warning btn-sm">Edit</a>
                     <form action="{{ route('class.destroy', $class->id) }}" method="POST" style="display:inline;">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this class?');">Delete</button>
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah anda yakin menghapus kelas ini?');">Delete</button>
                     </form>
                 </td>
             </tr>

@@ -11,13 +11,10 @@ class MahasiswaMainController extends Controller
 {
     public function index()
     {
-        // Mendapatkan user yang sedang login
         $user = Auth::user();
         
-        // Cek apakah user memiliki relasi classroom
         $classroom = $user->classroom;
         
-        // Ambil mata kuliah jika classroom ada, jika tidak, set ke koleksi kosong
         $subjects = $classroom ? $classroom->subjects : collect();
 
         // Ambil absensi berdasarkan subject yang diambil oleh dosen
@@ -46,9 +43,8 @@ class MahasiswaMainController extends Controller
             }
         }
 
-        $persentaseKehadiran = $totalPertemuan > 0 ? ($totalHadirs / $totalPertemuan) * 100 : 0;
+        $persentaseKehadiran = $totalPertemuan > 0 ? ($totalHadirs / $totalPertemuan) * 100 :  0;
 
-        // Kirim data ke view
         return view('mahasiswa.dashboard', compact('user', 'classroom', 'subjects', 'absensi', 'rekapAbsensi', 'persentaseKehadiran'));
     }
 

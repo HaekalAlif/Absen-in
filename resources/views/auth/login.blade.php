@@ -7,12 +7,12 @@
     
     <form method="POST" action="{{ route('login') }}">
         @csrf
-        <div style="background-color:#ffffff;">
+        <div style="background-color:#00AFEF;">
         <div class="container d-flex justify-content-center align-items-center min-vh-100" style="max-width: 700px">
             <div class="row border rounded-5 p-3 bg-white shadow w-100">
                 <div class="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column left-box" style="background: #ffffff;">
                     <div class="featured-image mb-3">
-                        <img src="{{ asset('admin_asset/img/login/uns-biru.png') }}" class="img-fluid" style="width: 100%; max-width: 400px;">
+                        <img src="{{ asset('admin_asset/img/login/Absen-In.png') }}" class="img-fluid" style="width: 100%; max-width: 400px;">
                     </div>
                 </div>
                 <div class="col-md-6 right-box">

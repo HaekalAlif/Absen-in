@@ -27,7 +27,7 @@
         position: relative;
         overflow: hidden;
         background-color: #f9f9f9;
-        margin: 0 auto; /* Memastikan elemen berada di tengah */
+        margin: 0 auto; 
     }
 
     #qr-reader::before {
@@ -42,14 +42,6 @@
         z-index: 10;
     }
 
-    /* Responsif */
-    @media (max-width: 768px) {
-        #qr-reader {
-            width: 80%; /* Mengatur ukuran QR reader agar lebih kecil pada layar kecil */
-        }
-    }
-
-    /* Styling tombol lokasi */
     #location-check-btn {
         font-size: 16px;
         padding: 10px 20px;
@@ -69,21 +61,18 @@
         font-size: 12px;
     }
 </style>
-
-
-    <!-- Tambahkan SweetAlert CDN -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('js/html5-qrcode.min.js') }}"></script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const RADIUS_KM = 4; // Radius 1 km
+            const RADIUS_KM = 1; // Radius 1 km
             const CAMPUS_LAT = -7.5629267945566845; // latitude kampus
-            const CAMPUS_LNG =  110.83562136627968; // ongitude kampus 
+            const CAMPUS_LNG =  110.83562136627968; // longitude kampus 
 
             // Fungsi untuk menghitung jarak menggunakan Haversine formula
             function calculateDistance(lat1, lon1, lat2, lon2) {
-                const R = 6371; // Radius bumi dalam kilometer
+                const R = 6371; 
                 const dLat = (lat2 - lat1) * Math.PI / 180;
                 const dLon = (lon2 - lon1) * Math.PI / 180;
                 const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
@@ -139,7 +128,6 @@
                 }
             }
 
-            // Fungsi untuk memulai QR scanner
             function startScanner() {
                 let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                 let isScanning = false;
@@ -158,7 +146,7 @@
                             'X-CSRF-TOKEN': csrfToken
                         },
                         body: JSON.stringify({
-                            qr_code: decodedText // Hasil QR Code adalah email
+                            qr_code: decodedText
                         })
                     })
                     .then(response => response.json())
@@ -219,9 +207,7 @@
                     .finally(() => {
                         setTimeout(() => { isScanning = false; }, 3000);
                     });
-}
-
-
+                }
 
                 function onScanFailure(error) {
                     console.warn(`Code scan error = ${error}`);

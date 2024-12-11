@@ -27,10 +27,7 @@ Route::middleware(['auth', 'verified', 'rolemanager:mahasiswa'])->group(function
         Route::get('/absensi', [AbsensiMahasiswaController::class, 'index'])->name('absensi.index');
         Route::get('/absensi/subject/{id}', [AbsensiMahasiswaController::class, 'show'])->name('mahasiswa.absensi');
 
-        // Route untuk halaman QR scanner
-        Route::get('/absensi/qr/{absenId}/{subjectId}/{classroomId}', [AbsensiMahasiswaController::class, 'showQrScanner'])->name('mahasiswa.absensi.qr');
-
-        // Route untuk menangani absensi berdasarkan hasil pemindaian QR
+        Route::get('/absensi/qr/{absenId}/{subjectId}/{classroomId}', [AbsensiMahasiswaController::class, 'showQrScanner'])->name('mahasiswa.absensi.qr'); 
         Route::post('/absensi/qr-submit', [AbsensiMahasiswaController::class, 'submitQr'])->name('absensi.qr.submit');
 
         Route::get('/absensi/qr', [AbsensiMahasiswaController::class, 'showQrScannerWithoutId'])->name('mahasiswa.absensi.qr.test');
@@ -38,7 +35,6 @@ Route::middleware(['auth', 'verified', 'rolemanager:mahasiswa'])->group(function
         Route::post('/absensi/check-time', [AbsensiMahasiswaController::class, 'checkAbsensiTime'])->name('mahasiswa.absensi.check-time');
 
         Route::post('/absensi/qr/validate', [AbsensiMahasiswaController::class, 'validateQr'])->name('absensi.qr.validate');
-
 
         // Route untuk profle
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -85,6 +81,8 @@ Route::middleware(['auth', 'verified', 'rolemanager:admin'])->group(function () 
             Route::delete('user/destroy/{id}', 'destroy')->name('user.destroy');   
             Route::get('user/qr-code/{id}','showQrCode')->name('user.qr_code'); 
             Route::get('/users',  'index')->name('user.index');
+            Route::get('/user/{id}/download-qr', 'downloadQrCode')->name('user.download.qr');
+
         });
     });
 });
@@ -108,23 +106,14 @@ Route::middleware(['auth', 'verified', 'rolemanager:dosen'])->group(function () 
         Route::get('/absensi', [AbsensiDosenController::class, 'index'])->name('absensi.index');
         Route::get('/absensi/subject/{id}', [AbsensiDosenController::class, 'show'])->name('dosen.absensi'); 
         Route::get('/absensi/detail/{id}', [AbsensiDosenController::class, 'detail'])->name('dosen.absensi.detail');
-        // Route untuk edit absensi
         Route::get('/absensi/{id}/edit', [AbsensiDosenController::class, 'edit'])->name('absensi.edit');
-        // Route untuk update absensi
         Route::put('/absensi/{id}', [AbsensiDosenController::class, 'update'])->name('absensi.update');
         });
-        // Route untuk detail absensi
         Route::get('/absensi/{id}', [AbsensiDosenController::class, 'show'])->name('absensi.show');
-        // Route untuk update status absensi
         Route::put('/absensi/{id}/update', [AbsensiDosenController::class, 'updateStatus'])->name('absensi.updateStatus');
         Route::put('/dosen/absensi/updateAll', [AbsensiDosenController::class, 'updateAll'])->name('absensi.updateAll');
-
-        // Route untuk menampilkan detail absensi
         Route::get('/absensi/detail/{absenId}/{subject_id}/{classroom_id}', [AbsensiDosenController::class, 'detail'])->name('absensi.detail');
-
-       // Rute untuk update semua absensi dengan tambahan user_id sebagai parameter
         Route::put('/absensi/update-all/{absenId}/{subject_id}/{classroom_id}/{user_id}', [AbsensiDosenController::class, 'updateAllAbsensi'])->name('absensi.updateAll');
-
         Route::delete('absensi/{id}', [AbsensiDosenController::class, 'destroy'])->name('absensi.destroy');
 });
     

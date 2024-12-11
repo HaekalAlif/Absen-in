@@ -6,7 +6,7 @@ Add Subject - Admin Panel
 
 @section('admin_layout')
 <div class="container">
-    <h1>Tambah Subject</h1>
+    <h1>Create New Subject</h1>
     
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
