@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\RekapAbsensi;
-use App\Models\Subject; // Tambahkan ini
+use App\Models\Subject; 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 

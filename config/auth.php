@@ -40,6 +40,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'api' => [
+        'driver' => 'jwt',  // Ubah menjadi 'jwt' untuk autentikasi berbasis token
+        'provider' => 'users',
+        ],
     ],
 
     /*

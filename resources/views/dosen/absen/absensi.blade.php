@@ -5,6 +5,7 @@ Absensi - {{ $subject->name }} - Dosen Panel
 @endsection
 
 @section('dosen_layout')
+
 <div class="container">
     <h1>Absensi - Mata Kuliah: {{ $subject->name }}</h1>
     <br>
@@ -85,8 +86,7 @@ Absensi - {{ $subject->name }} - Dosen Panel
         </tbody>
     </table>
 
-    {{-- Meta tag CSRF --}}
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+
 
     {{-- SweetAlert2 dan JavaScript --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>

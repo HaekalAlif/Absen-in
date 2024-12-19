@@ -58,7 +58,7 @@ Edit Absensi - Dosen Panel
 <script>
     // Fungsi konfirmasi sebelum submit form
     function confirmSubmit(event) {
-        event.preventDefault(); // Mencegah form disubmit secara langsung
+        event.preventDefault(); 
 
         Swal.fire({
             title: 'Konfirmasi Simpan',

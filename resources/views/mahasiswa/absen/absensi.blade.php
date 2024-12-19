@@ -20,7 +20,7 @@
                 </thead>
                 <tbody>
                     @foreach($absensi as $item)
-                        <tr>
+                        <tr style="{{ in_array($item->attendance_status, ['izin', 'sakit']) ? 'background-color: yellow;' : '' }}">
                             <td>{{ $item->date }}</td>
                             <td>{{ $item->start_time }}</td>
                             <td>{{ $item->end_time }}</td>
@@ -28,15 +28,19 @@
                                 {{ $item->attendance_status == 'open' || $item->attendance_status == 'pending' ? 'Buka' : 'Tutup' }}
                             </td>
                             <td>
-                                @if($item->attendance_status == 'open' || $item->attendance_status == 'pending')
+                                @if(in_array($item->attendance_status, ['izin', 'sakit']))
+                                    <button class="btn btn-warning" disabled>
+                                        {{ ucfirst($item->attendance_status) }}
+                                    </button>
+                                @elseif($item->attendance_status == 'open' || $item->attendance_status == 'pending')
                                     @if($item->already_attended)
                                         <button class="btn btn-success" disabled>Sudah Absen</button>
                                     @else
                                         <button id="absenButton{{ $item->id }}" class="btn btn-danger"
-                                           data-start-time="{{ $item->start_time }}"
-                                           data-end-time="{{ $item->end_time }}"
-                                           data-date="{{ $item->date }}"
-                                           data-absensi-id="{{ $item->id }}">
+                                        data-start-time="{{ $item->start_time }}"
+                                        data-end-time="{{ $item->end_time }}"
+                                        data-date="{{ $item->date }}"
+                                        data-absensi-id="{{ $item->id }}">
                                             Absen
                                         </button>
                                     @endif
@@ -109,5 +113,4 @@
         });
     </script>
 @endforeach
-
 @endsection

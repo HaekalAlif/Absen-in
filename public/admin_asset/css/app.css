@@ -4744,9 +4744,7 @@ fieldset:disabled .btn {
     pointer-events: none;
     -webkit-user-select: none;
     -moz-user-select: none;
-    user-select: none;
-}
-.btn-close-white {
+    user-select: none; 
     filter: var(--bs-btn-close-white-filter);
 }
 .clearfix:after {
@@ -13386,4 +13384,3 @@ span.flatpickr-weekday {
     top: 0;
     width: 260px;
 }
-/*# sourceMappingURL=app.css.map*/

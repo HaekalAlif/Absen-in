@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class LoginRequest extends FormRequest
 {
@@ -33,7 +34,7 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Attempt to authenticate the request's credentials.
+     * Attempt to authenticate the request's credentials and generate JWT.
      *
      * @throws \Illuminate\Validation\ValidationException
      */
@@ -50,6 +51,13 @@ class LoginRequest extends FormRequest
         }
 
         RateLimiter::clear($this->throttleKey());
+
+        // Generate JWT token after successful login
+        $user = Auth::user();
+        $token = JWTAuth::fromUser($user);  // Generate the JWT token
+
+        // Directly return the token in the response
+        $this->setToken($token);
     }
 
     /**
@@ -81,5 +89,17 @@ class LoginRequest extends FormRequest
     public function throttleKey(): string
     {
         return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+    }
+
+    /**
+     * Set the generated JWT token to the response.
+     *
+     * @param string $token
+     */
+    protected function setToken(string $token): void
+    {
+        $this->merge([
+            'token' => $token
+        ]);
     }
 }

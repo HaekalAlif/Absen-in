@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Classroom; // Import model Classroom
+use App\Models\Classroom; 
 use Illuminate\Http\Request; 
 
 class ClassController extends Controller
@@ -17,7 +17,7 @@ class ClassController extends Controller
     // Menampilkan daftar kelas yang ada
     public function manage_class()
     {
-        $classes = Classroom::all(); // Mengambil semua data kelas dari database
+        $classes = Classroom::all(); 
         return view('admin.class.manage', compact('classes'));
     }
 
@@ -28,17 +28,16 @@ class ClassController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'batch_year' => 'required|integer',
-            'tahun' => 'required|string|max:255',  // Validasi untuk kolom tahun
+            'tahun' => 'required|string|max:255',  
         ]);
 
         // Menyimpan data kelas baru
         Classroom::create([
             'name' => $request->name,
             'batch_year' => $request->batch_year,
-            'tahun' => $request->tahun,  // Menambahkan tahun ke dalam database
+            'tahun' => $request->tahun,  
         ]);
 
-        // Redirect ke halaman manajemen kelas dengan pesan sukses
         return redirect()->route('class.manage')->with('success', 'Kelas berhasil ditambahkan');
     }
 
@@ -47,7 +46,7 @@ class ClassController extends Controller
     // Menampilkan form untuk mengedit kelas
     public function edit($id)
     {
-        $classroom = Classroom::findOrFail($id); // Mencari kelas berdasarkan id
+        $classroom = Classroom::findOrFail($id); 
         return view('admin.class.edit', compact('classroom'));
     }
 
@@ -58,7 +57,7 @@ class ClassController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'batch_year' => 'required|integer',
-            'tahun' => 'required|string|max:255',  // Validasi untuk kolom tahun
+            'tahun' => 'required|string|max:255',  
         ]);
 
         // Temukan kelas dan update datanya
@@ -66,10 +65,9 @@ class ClassController extends Controller
         $classroom->update([
             'name' => $request->name,
             'batch_year' => $request->batch_year,
-            'tahun' => $request->tahun,  // Menambahkan tahun ke dalam update
+            'tahun' => $request->tahun,  
         ]);
 
-        // Redirect ke halaman manage dengan pesan sukses
         return redirect()->route('class.manage')->with('success', 'Kelas berhasil diperbarui');
     }
 
@@ -79,9 +77,6 @@ class ClassController extends Controller
         $classroom = Classroom::findOrFail($id);
         $classroom->delete();
 
-        // Redirect ke halaman manage dengan pesan sukses
         return redirect()->route('class.manage')->with('success', 'Kelas berhasil dihapus');
     }
-
-
 }

@@ -12,32 +12,24 @@ use App\Models\RekapAbsensi;
 
 class AbsensiDosenController extends Controller
 {
-    // AbsensiDosenController.php
     public function show($id)
     {
-        // Ambil data user yang sedang login
         $user = Auth::user();
 
-        // Ambil mata kuliah berdasarkan ID dan pastikan mata kuliah ini milik dosen yang sedang login
         $subject = Subject::where('id', $id)
-                        ->where('user_id', $user->id)  // Pastikan mata kuliah ini milik dosen yang login
-                        ->firstOrFail(); // Jika tidak ada, akan menghasilkan 404
+                        ->where('user_id', $user->id)  
+                        ->firstOrFail(); 
 
-        // Ambil semua data kelas untuk dropdown
         $classrooms = Classroom::all();
 
-        // Ambil semua absensi yang terkait dengan mata kuliah ini (dosen yang sama)
         $absensi = Absensi::where('subject_id', $id)
-                        ->where('user_id', $user->id) // Filter absensi berdasarkan dosen yang login
+                        ->where('user_id', $user->id) 
                         ->get();
 
-        // Simpan subject_id ke dalam session untuk digunakan di store method
         session(['subject_id' => $subject->id]);
 
-        // Kembalikan view dengan data yang diperlukan
         return view('dosen.absen.absensi', compact('subject', 'classrooms', 'absensi'));
     }
-
 
     // Menyimpan absensi baru
     public function store(Request $request)
@@ -75,7 +67,6 @@ class AbsensiDosenController extends Controller
     {
         $user = Auth::user();
 
-        // Ambil subjects yang diajarkan oleh dosen ini
         $subjects = Subject::where('user_id', $user->id)->get();
         $absensi = [];
 
@@ -90,30 +81,26 @@ class AbsensiDosenController extends Controller
 
     public function detail($id, $subject_id, $classroom_id)
     {
-        // Ambil data dosen yang sedang login
         $user = Auth::user();
 
-        // Ambil mata kuliah berdasarkan ID dan pastikan mata kuliah ini milik dosen yang sedang login
         $subject = Subject::where('id', $subject_id)
-                        ->where('user_id', $user->id)  // Memastikan mata kuliah milik dosen yang login
+                        ->where('user_id', $user->id)  
                         ->firstOrFail();
 
-        // Ambil kelas yang terhubung dengan mata kuliah
         $classroom = Classroom::findOrFail($classroom_id);
 
         // Ambil semua absensi yang ada di kelas ini berdasarkan mata kuliah dan kelas, dan hanya untuk absen_id tertentu
         $attendanceRecords = Absensi::where('subject_id', $subject_id)
                                     ->where('classroom_id', $classroom_id)
-                                    ->where('id', $id)  // Filter hanya untuk absen_id yang sesuai
+                                    ->where('id', $id) 
                                     ->get();
 
-        // Ambil semua mahasiswa yang terdaftar di kelas ini (role 2 sebagai mahasiswa)
         $students = $classroom->users()->where('role', 2)->get();
 
         // Ambil data rekap absensi yang hanya terkait dengan absen_id, subject_id, dan classroom_id yang sesuai
         $rekapAbsensi = RekapAbsensi::where('subject_id', $subject_id)
                                     ->where('classroom_id', $classroom_id)
-                                    ->whereIn('absen_id', [$id]) // Filter berdasarkan absen_id
+                                    ->whereIn('absen_id', [$id]) 
                                     ->get();
 
         // Kirim data ke view
@@ -125,14 +112,11 @@ class AbsensiDosenController extends Controller
     public function edit($id)
     {
         $user = Auth::user();
-        
-        // Cari absensi berdasarkan ID dan pastikan absensi tersebut milik dosen yang sedang login
+
         $absensi = Absensi::where('id', $id)->where('user_id', $user->id)->firstOrFail();
 
-        // Ambil mata kuliah yang terkait dengan absensi ini
         $subject = $absensi->subject;
 
-        // Ambil semua data kelas untuk dropdown jika diperlukan
         $classrooms = Classroom::all();
 
         return view('dosen.absen.edit', compact('absensi', 'subject', 'classrooms'));
@@ -148,7 +132,6 @@ class AbsensiDosenController extends Controller
             'end_time' => 'required',
         ]);
 
-        // Cari absensi yang akan diupdate
         $absensi = Absensi::findOrFail($id);
 
         // Perbarui absensi
@@ -164,31 +147,23 @@ class AbsensiDosenController extends Controller
 
     public function destroy($id)
     {
-        // Cari absensi berdasarkan ID dan pastikan absensi tersebut milik dosen yang sedang login
         $absensi = Absensi::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
 
-        // Hapus absensi
         $absensi->delete();
 
         return redirect()->route('dosen.absensi', ['id' => $absensi->subject_id])->with('success', 'Absensi berhasil dihapus!');
     }
 
-
-    // Controller updateStatus method
     public function updateStatus(Request $request, $id)
     {
         try {
-            // Cari absensi berdasarkan ID
             $attendance = Absensi::findOrFail($id);
 
-            // Update status absensi dengan nilai yang dikirimkan
             $attendance->attendance_status = $request->attendance_status;
             $attendance->save();
 
-            // Mengembalikan response sukses
             return response()->json(['success' => true]);
         } catch (\Exception $e) {
-            // Jika terjadi kesalahan, tangani dan kirimkan response gagal
             return response()->json(['success' => false, 'message' => 'Gagal memperbarui status absensi.']);
         }
     }
@@ -196,19 +171,15 @@ class AbsensiDosenController extends Controller
     // Menampilkan mahasiswa berdasarkan mata kuliah dan kelas
     public function showMahasiswa($id)
     {
-        // Ambil data user yang sedang login
         $user = Auth::user();
 
-        // Ambil mata kuliah berdasarkan ID dan pastikan mata kuliah ini milik dosen yang sedang login
         $subject = Subject::where('id', $id)
-                        ->where('user_id', $user->id)  // Pastikan mata kuliah ini milik dosen yang login
-                        ->firstOrFail(); // Jika tidak ada, akan menghasilkan 404
+                        ->where('user_id', $user->id)  
+                        ->firstOrFail(); 
 
-        // Ambil kelas yang terhubung dengan mata kuliah
-        $classroom = $subject->classroom; // Sesuaikan dengan relasi antara subject dan classroom
+        $classroom = $subject->classroom; 
 
-        // Ambil semua mahasiswa yang terdaftar di kelas ini (role 2 untuk mahasiswa)
-        $students = $classroom->users()->where('role', 2)->get(); // Menggunakan role 2 untuk mahasiswa
+        $students = $classroom->users()->where('role', 2)->get(); 
 
         return view('dosen.absen.showMahasiswa', compact('students', 'subject', 'classroom'));
     }
@@ -216,28 +187,23 @@ class AbsensiDosenController extends Controller
    public function updateAllAbsensi(Request $request, $absenId, $subject_id, $classroom_id, $user_id)
     {
         try {
-            // Ambil data status absensi dari request
-            $attendanceStatuses = $request->input('attendance_statuses'); // ID absensi yang sudah ada
+            $attendanceStatuses = $request->input('attendance_statuses'); 
             
             // Update status absensi yang sudah ada
             if ($attendanceStatuses) {
                 foreach ($attendanceStatuses as $rekapId => $status) {
-                    // Jika id yang dikirimkan diawali dengan 'new_', berarti data tersebut baru
                     if (strpos($rekapId, 'new_') === false) {
-                        // Cari rekapan absensi yang sesuai dengan ID
                         $rekapAbsensi = RekapAbsensi::findOrFail($rekapId);
 
-                        // Update status absensi
                         $rekapAbsensi->attendance_status = $status;
-                        $rekapAbsensi->save(); // Simpan perubahan
+                        $rekapAbsensi->save(); 
                     } else {
-                        // ID baru, buat entry baru di rekap_absensi
                         $parts = explode('_', $rekapId);
-                        $studentId = $parts[1]; // Ambil ID mahasiswa dari nama yang baru
+                        $studentId = $parts[1]; 
 
                         RekapAbsensi::create([
                             'user_id' => $studentId,
-                            'absen_id' => $absenId, // Harus sesuai dengan ID absensi yang valid
+                            'absen_id' => $absenId, 
                             'subject_id' => $subject_id,
                             'classroom_id' => $classroom_id,
                             'attendance_status' => $status,
@@ -247,7 +213,6 @@ class AbsensiDosenController extends Controller
                 }
             }
 
-            // Redirect kembali ke halaman detail dengan pesan sukses
             return redirect()->route('absensi.detail', [
                 'id' => $absenId,
                 'subject_id' => $subject_id,
@@ -255,7 +220,6 @@ class AbsensiDosenController extends Controller
             ])->with('success', 'Absensi berhasil diperbarui.');
             
         } catch (\Exception $e) {
-            // Tangani error jika ada
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
@@ -265,14 +229,12 @@ class AbsensiDosenController extends Controller
         $user = Auth::user();
         $subjectId = $request->subject_id;
         $classroomId = $request->classroom_id;
-        $attendanceStatuses = $request->attendance_statuses; // Status absensi yang dipilih dosen
+        $attendanceStatuses = $request->attendance_statuses; 
 
         // Loop melalui setiap status absensi yang telah diubah
         foreach ($attendanceStatuses as $rekapId => $status) {
-            // Cari data rekap absensi berdasarkan id rekap_absensi dan user_id
             $rekapAbsensi = RekapAbsensi::find($rekapId);
 
-            // Pastikan hanya mengupdate data yang sesuai dengan mata kuliah dan kelas yang benar
             if ($rekapAbsensi && $rekapAbsensi->subject_id == $subjectId && $rekapAbsensi->classroom_id == $classroomId) {
                 $rekapAbsensi->attendance_status = $status;
                 $rekapAbsensi->save();

@@ -8,15 +8,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\Classroom; 
-use SimpleSoftwareIO\QrCode\Facades\QrCode; // Impor QR Code
+use SimpleSoftwareIO\QrCode\Facades\QrCode; 
 
 class UserController extends Controller
 {
     // Menampilkan form untuk membuat user baru
     public function index()
     {
-        $classrooms = Classroom::all(); // Ambil semua kelas
-        return view('admin.user.create', compact('classrooms')); // Pastikan 'classrooms' tersedia di view
+        $classrooms = Classroom::all(); 
+        return view('admin.user.create', compact('classrooms')); 
     }
 
     // Menampilkan daftar user yang telah dibuat
@@ -46,7 +46,6 @@ class UserController extends Controller
         // Menyimpan user baru ke database
     public function store(Request $request)
     {
-        // Validasi input
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -63,19 +62,18 @@ class UserController extends Controller
         $user->role = $request->role;
         $user->class_id = $request->class_id;
 
-        // Ambil tahun angkatan dari kelas yang dipilih
         if ($request->class_id) {
             $classroom = Classroom::findOrFail($request->class_id);
-            $user->batch_year = $classroom->batch_year; // Set batch_year dari kelas
+            $user->batch_year = $classroom->batch_year; 
         }
 
-        $user->status = 'active'; // Status default
+        $user->status = 'active'; 
 
         // Generate QR Code untuk mahasiswa
         if ($request->role == 2) {
             $qrCodePath = 'qr-codes/' . Str::random(10) . '.png'; // Simpan di public/qr-codes/
             QrCode::format('png')->size(300)->generate($user->email, public_path($qrCodePath));
-            $user->qr_code = $qrCodePath; // Simpan hanya relative path
+            $user->qr_code = $qrCodePath; 
         }
         
         $user->save(); // Simpan ke database
@@ -88,15 +86,14 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::findOrFail($id);
-        $classrooms = Classroom::all(); // Ambil semua kelas untuk ditampilkan di dropdown
+        $classrooms = Classroom::all(); 
 
-        return view('admin.user.edit', compact('user', 'classrooms')); // Kirim user dan classrooms ke view
+        return view('admin.user.edit', compact('user', 'classrooms')); 
     }
     
     // Mengupdate data user
     public function update(Request $request, $id)
     {
-        // Validasi input
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $id,
@@ -116,9 +113,9 @@ class UserController extends Controller
         
         $user->role = $request->role;
         $user->class_id = $request->class_id;
-        $user->status = 'active'; // Jika ada status lain, sesuaikan
+        $user->status = 'active';
 
-        $user->save(); // Simpan perubahan ke database
+        $user->save(); 
 
         return redirect()->route('user.manage')->with('success', 'User berhasil diperbarui!');
     }
@@ -131,7 +128,6 @@ class UserController extends Controller
         // Hapus data terkait di tabel rekap_absensi
         $user->rekap_absensi()->delete(); // Hapus semua data rekap_absensi terkait dengan user
 
-        // Hapus user
         $user->delete();
 
         return redirect()->route('user.manage')->with('success', 'User beserta data terkait berhasil dihapus!');
@@ -141,7 +137,7 @@ class UserController extends Controller
     // Menampilkan QR code pengguna
     public function showQrCode($id)
     {
-        $user = User::findOrFail($id); // Ambil user berdasarkan ID
+        $user = User::findOrFail($id);
 
         return view('admin.user.qr_code', compact('user'));
     }
@@ -155,7 +151,6 @@ class UserController extends Controller
             return redirect()->route('user.manage')->with('error', 'QR Code tidak ditemukan.');
         }
 
-        // Siapkan file untuk diunduh
         $filePath = public_path($user->qr_code);
         $fileName = $user->name . '_QR_Code.png';
 

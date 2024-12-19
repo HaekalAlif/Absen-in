@@ -17,27 +17,21 @@ class MahasiswaMainController extends Controller
         
         $subjects = $classroom ? $classroom->subjects : collect();
 
-        // Ambil absensi berdasarkan subject yang diambil oleh dosen
         $absensi = Absensi::whereIn('subject_id', $subjects->pluck('id'))
                         ->where('classroom_id', $classroom->id)
                         ->get();
-        
-        // Ambil rekap absensi untuk mengecek apakah user sudah hadir
+
         $rekapAbsensi = RekapAbsensi::whereIn('subject_id', $subjects->pluck('id'))
                                     ->where('classroom_id', $classroom->id)
                                     ->where('user_id', $user->id)
                                     ->get();
-        
-        // Perhitungan persentase kehadiran
+
         $totalPertemuan = $absensi->count();
         $totalHadirs = 0;
 
-        // Menambahkan status absensi untuk setiap mata kuliah
         foreach ($absensi as $attendance) {
-            // Cek apakah ada rekap absensi untuk user_id dan absen_id yang sesuai
             $rekap = $rekapAbsensi->where('absen_id', $attendance->id)->first();
 
-            // Jika ada rekap absensi, berarti user sudah hadir
             if ($rekap && $rekap->attendance_status == 'hadir') {
                 $totalHadirs++;
             }

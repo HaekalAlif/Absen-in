@@ -54,7 +54,6 @@
                 plugins: {
                     tooltip: {
                         callbacks: {
-                            // Menyesuaikan tooltip untuk menampilkan nama mata kuliah dan kelas
                             label: function(tooltipItem) {
                                 var subjectName = tooltipItem.label;
                                 var className = @json($classNames)[tooltipItem.dataIndex];
@@ -93,13 +92,13 @@
         .custom-card-title {
             font-size: 16px;
             font-weight: bold;
-            color: #333; /* Warna netral untuk teks */
+            color: #333; 
         }
 
         /* Text Styling */
         .card-text {
             font-size: 14px;
-            color: #555; /* Sedikit lebih gelap untuk kontras */
+            color: #555; 
         }
 
         /* Body Padding */

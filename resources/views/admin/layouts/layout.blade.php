@@ -8,15 +8,16 @@
 	<meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
 	<meta name="author" content="AdminKit">
 	<meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+	<meta name="csrf-token" content="{{ csrf_token() }}">
 
 	<link rel="preconnect" href="https://fonts.gstatic.com">
 	<link rel="shortcut icon" href="img/icons/icon-48x48.png" />
-
+	
 	<link rel="canonical" href="https://demo-basic.adminkit.io/pages-blank.html" />
 
 	<title>@yield('admin_page_title')</title>
-	<!-- SweetAlert2 CSS -->
-
+	<!-- SweetAlert2 CDN -->
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.7/dist/sweetalert2.min.css">
 	<link href="{{asset('admin_asset/css/app.css')}}" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -25,8 +26,6 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 	<!-- Menambahkan Chart.js dari CDN -->
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-
 </head>
 
 <body>
@@ -91,6 +90,16 @@
                     <li class="sidebar-item {{request()->routeIs('user.manage')?'active':''}}">
 						<a class="sidebar-link"href="{{route(name: 'user.manage')}}">
               <i class="align-middle" data-feather="list"></i> <span class="align-middle">Manage User</span>
+            </a>
+					</li>
+
+					<li class="sidebar-header">
+						Setting
+					</li>
+
+					<li class="sidebar-item {{request()->routeIs('admin.settings')?'active':''}}">
+						<a class="sidebar-link" href="{{route(name: 'admin.settings')}}">
+              <i class="align-middle" data-feather="settings"></i> <span class="align-middle">Setting</span>
             </a>
 					</li>
 		</nav>

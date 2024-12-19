@@ -49,11 +49,16 @@ Route::middleware(['auth', 'verified', 'rolemanager:mahasiswa'])->group(function
 //admin routes
 Route::middleware(['auth', 'verified', 'rolemanager:admin'])->group(function () {
     Route::prefix('admin')->group(function(){
-        Route::controller(AdminMainController::class)->group(function(){
+         // Grup route yang menggunakan JWT
+        Route::middleware('jwt.token')->controller(AdminMainController::class)->group(function(){
             Route::get('/dashboard', 'index')->name('admin');
             Route::get('/settings', 'setting')->name('admin.settings');
+            Route::get('/admin/settings/backup', [AdminMainController::class, 'backupDatabase'])->name('admin.settings.backup');
+            Route::post('/admin/settings/restore', [AdminMainController::class, 'restoreDatabase'])->name('admin.settings.restore');
+            Route::post('settings/send-otp', [AdminMainController::class, 'sendOtp'])->name('admin.settings.sendOtp');
+            Route::post('settings/verify-otp', [AdminMainController::class, 'verifyOtp'])->name('admin.settings.verifyOtp');
         });
-
+        
         Route::controller(ClassController::class)->group(function(){
             Route::get('/class/create', 'index')->name('class.create');
             Route::post('/class/store', 'store')->name('class.store'); 

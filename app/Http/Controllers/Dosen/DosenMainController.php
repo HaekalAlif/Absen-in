@@ -18,10 +18,8 @@ class DosenMainController extends Controller
 
     public function index()
     {
-        // Ambil data dosen yang sedang login
         $user = Auth::user();
 
-        // Ambil semua mata kuliah yang diajarkan oleh dosen ini
         $taughtSubjects = Subject::where('user_id', $user->id)->get();
 
         $subjectNames = [];
@@ -29,17 +27,13 @@ class DosenMainController extends Controller
         $classNames = [];
         
         foreach ($taughtSubjects as $subject) {
-            // Ambil jumlah mahasiswa yang terdaftar pada mata kuliah ini (role = 2)
             $studentsCount[] = $subject->classroom->users()->where('role', 2)->count();
 
-            // Simpan nama mata kuliah
             $subjectNames[] = $subject->name;
 
-            // Simpan nama kelas terkait dengan mata kuliah ini
             $classNames[] = $subject->classroom->name;
         }
 
-        // Kirim data ke view
         return view('dosen.dashboard', compact('subjectNames', 'studentsCount', 'classNames'));
     }
 
